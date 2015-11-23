@@ -4,15 +4,13 @@
  * @author Thomas R. Carrel
  * @file Node.cpp
  */
-
 #include"node.h"
 
-/** Node ctor.  Only one really needs to be created but multiple can safely be
- * run concurrently.
+/** Node ctor.
+ * @param w, The dummy weight associated with this node.
  */
-Node::Node()
-{
-}
+Node::Node( long double w ) : w_(w)
+{}
 
 /**
  * Runs the functionality of the individual node.
@@ -20,27 +18,30 @@ Node::Node()
  * @param weights, Weight of each edge from the nodes of the previous layer.
  * Should be NULL, on the input layer.
  */
-double Node::operator()( 
-        const vector<double>* data,
-        const vector<double>* weights )
+long double Node::operator()( 
+        const vector<long double>& data,
+        const vector<long double>& weights )
 {
-    return (weights)?
-        hidden_layer( *data, *weights ):
-        input_layer( *data );
+    assert( data.size() == weights.size() );
+
+    long double output = w_;
+    int size = data.size();
+
+    for( int ii = 0; ii < size; ii++ )
+    {
+        output += data[ii] * weights[ii];
+    }
+
+    return 1 / ( 1 + exp(-output) );
 }
 
-double Node::input_layer( const vector<double>& data )
+
+/**
+ * Overloaded insertion operator for debugging and for saving.
+ */
+ostream& operator<<( ostream& out, Node node )
 {
-    double output;
+    out << node.w_;
 
-    return output;
-}
-
-double Node::hidden_layer(
-        const vector<double>& data,
-        const vector<double>& weights )
-{
-    double output;
-
-    return output;
+    return out;
 }
