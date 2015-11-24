@@ -1,7 +1,8 @@
 Taber Storm Fitzgerald
 Thomas Russel Carrel
+Michael Taylor
 
 AI Project
 
-
-Stuff goes here!!
+Makefile
+Thomas, how do you use your make file?
