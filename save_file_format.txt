@@ -28,9 +28,11 @@ by a list of more doubles for the weights of each edge from the previous layer.
 
     %
 
- The percent can be any symbol, but this is to delineate between layers of the
+  The percent can be any symbol, but this is to delineate between layers of the
 neural net.  It is necessary because the main object is going to need to create
 a new vector between each layer so that it can pass values between each layer.
+  The number of these should be equal to the integer at the beginning of the
+file.
 
 ================================================================================
 
