@@ -5,4 +5,6 @@ Michael Taylor
 AI Project
 
 Makefile
-Thomas, how do you use your make file?
+
+Q: Thomas, how do you use your Makefile?
+A: I added instructions to the Makefile.
