@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+
+<body>
+    <canvas id="canvas" height="40" width="40"></canvas>
+    <br>
+    <script>
+        var fonts = ['Sans-serif', 'Arial', 'Arial Black', 'Arial Narrow', 'Arial Rounded MT Bold', 'Avant Garde',
+            'Calibri', 'Candara', 'Century Gothic', 'Franklin Gothic Medium', 'Futura', 'Geneva', 'Gill Sans',
+            'Helvetica', 'Impact', 'Lucida Grande', 'Optima', 'Segoe UI', 'Tahoma', 'Trebuchet MS', 'Verdana', 'Serif',
+            'Big Caslon', 'Bodoni MT', 'Book Antiqua', 'Calisto MT', 'Cambria', 'Didot', 'Garamond', 'Georgia',
+            'Goudy Old Style', 'Hoefler Text', 'Lucida Bright', 'Palatino', 'Perpetua', 'Rockwell', 'Rockwell Extra Bold',
+            'Baskerville', 'Times New Roman', 'Monospaced', 'Consolas', 'Courier New', 'Lucida Console',
+            'Lucida Sans Typewriter', 'Monaco', 'Andale Mono', 'Fantasy', 'Copperplate', 'Papyrus', 'Script',
+            'Brush Script MT'],
+            chars = ['a', 'b', 'c', 'd', 'e'],
+            canvas = document.getElementById('canvas'),
+            canvasContext = canvas.getContext('2d'),
+            pixels = '40px';
+
+        fonts.forEach(function(font) {
+            canvasContext.font = pixels + ' ' +  font;
+            chars.forEach(function(char) {
+                canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+                canvasContext.fillText(char, 0, 40);
+                var dataURL = canvas.toDataURL();
+                var link = document.createElement('a');
+                link.setAttribute('download',char + '_'+ font.replace(/ /g, '_') +'.png');
+                link.setAttribute('href', dataURL);
+                link.setAttribute('href', dataURL);
+                link.innerHTML = char + '_'+ font;
+                document.body.appendChild(link);
+                document.body.appendChild(document.createElement('br'));
+            });
+        });
+    </script>
+</body>
+</html>
