@@ -18,6 +18,10 @@ using std::vector;
 using std::exp;
 using std::ostream;
 
+/** All nodes are in either the hidden or output layers, nodes in the input
+ * layer will simply be the result of a single image processing function/object
+ * generating a vector of numerical inputs for the subsequent layers.
+ */
 class Node
 {
     public:
