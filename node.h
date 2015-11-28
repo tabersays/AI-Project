@@ -17,6 +17,7 @@
 using std::vector;
 using std::exp;
 using std::ostream;
+using std::istream;
 
 /** All nodes are in either the hidden or output layers, nodes in the input
  * layer will simply be the result of a single image processing function/object
@@ -34,14 +35,17 @@ class Node
         void train();
 
         friend ostream& operator<<( ostream&, Node );
+        friend istream& operator>>( istream&, Node );
     private:
         long double w_; ///>The dummy weight associated with this node.
-        vector<long double>* weights_; /**> The weights of all the connection
-                                         from the nodes in the previous layer
-                                         of the ANN. **/
+        vector<long double> weights_; /**> The weights of all the connection
+                                        from the nodes in the previous layer
+                                        of the ANN. **/
 };
 
-ostream& operator>>( ostream&, Node );
+/** For loading a node from file.*/
+istream& operator>>( istream&, Node );
+/** For outputing a node to the screen or to a file. */
 ostream& operator<<( ostream&, Node );
 
 #endif
