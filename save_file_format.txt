@@ -1,0 +1,58 @@
+
+  So, this file is an explanation of the format I'm thinking of for saving our
+neural network after its been trained.
+
+##			This is the number (int) of layers, not counting input.
+				May not be necessary but provides a check.
+#.## #.## #.## #.##@	Each line is a single node.
+#.## #.## #.## #.##@
+#.## #.## #.## #.##@
+%			This or some other symbol, represent the end of a layer.
+#.## #.## #.##@
+#.## #.## #.##@
+#.## #.## #.##@
+%			Optional.
+\EOF
+
+================================================================================
+
+  This is the an explanation of the format for the format of a line of node
+data:
+
+    (double) [optional double_1, double_2, ..., double_n]@ 
+
+  The first double is the dummy weight associated with the node. It is followed
+by a list of more doubles for the weights of each edge from the previous layer.
+
+================================================================================
+
+    %
+
+ The percent can be any symbol, but this is to delineate between layers of the
+neural net.  It is necessary because the main object is going to need to create
+a new vector between each layer so that it can pass values between each layer.
+
+================================================================================
+
+    /EOF End Of File.
+
+  The main object will need to create one additional vector at this point for
+the output layer.  And is shown just for illustrative purposes.
+
+Q:
+ Actually since we're recognizing characters, maybe just having it output a
+single double at the end and round it to the nearest integer, that int being
+the ASCII value of the character it's recognized?
+
+================================================================================
+
+  An example of a saved neural net.  This is based on the one we did for
+homework. (Problem 1)
+
+2
+0.99907 0.9998 0.99925@
+%
+0.99118 0.9922@
+1.00003 1.00003@
+%
+\EOF
