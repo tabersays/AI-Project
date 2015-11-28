@@ -29,7 +29,7 @@ class Node
 {
     public:
         Node( LD );
-        ~Node();
+        ~Node( void );
 
         LD operator()( const vector<LD>& );
 
