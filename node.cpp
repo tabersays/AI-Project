@@ -82,5 +82,6 @@ istream& operator>>( istream& in, Node node )
         in >> n;
         node.weights_.push_back(n);
     }
+    in.ignore();
     return in;
 }
