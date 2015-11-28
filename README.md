@@ -6,5 +6,9 @@ AI Project
 
 Makefile
 
-Q: Thomas, how do you use your Makefile?
+Q: How do you use your Makefile?
+
 A: I added instructions to the Makefile.
+
+
+Remember to check issues for other items of note.
