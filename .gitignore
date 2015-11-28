@@ -33,6 +33,5 @@
 
 # Other files
 *.gccerr
-Doxyfile
 documentation/*
 recognize
