@@ -3,12 +3,11 @@
 #
 #   Makefile
 #
-#   Set the DEBUG variable on line 12 to something other than 0 (zero) to
-#  to enable compilation of additional functions that may be useful during
-#  development.
-#   
 #   All of these compile lines are set up to duplicate all output (errors) from
 #  g++ and copy it into a file.
+#
+#   Note, that you must have a directory called Errors/ in order for this file
+#  to work.
 #
 
 CXX = g++
