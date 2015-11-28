@@ -127,3 +127,10 @@ istream& operator>>( istream& in, Node node )
     in.ignore();
     return in;
 }
+
+/** Destructor, empties the weights vector.
+ */
+Node::~Node(void)
+{
+    weights_.clear();
+}
