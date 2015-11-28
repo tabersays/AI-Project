@@ -2,12 +2,14 @@
   So, this file is an explanation of the format I'm thinking of for saving our
 neural network after its been trained.
 
+##			The number (int) of nodes in the input layer.
 ##			This is the number (int) of layers, not counting input.
-				May not be necessary but provides a check.
+				May not be necessary but provides a check later.
 #.## #.## #.## #.##@	Each line is a single node.
 #.## #.## #.## #.##@
 #.## #.## #.## #.##@
-%			This or some other symbol, represent the end of a layer.
+%			This or some other symbol, represents the end of a
+				layer.
 #.## #.## #.##@
 #.## #.## #.##@
 #.## #.## #.##@
@@ -49,8 +51,9 @@ the ASCII value of the character it's recognized?
 ================================================================================
 
   An example of a saved neural net.  This is based on the one we did for
-homework. (Problem 1)
+homework, Problem 1.  Note that the input layer is not lis
 
+2
 2
 0.99907 0.9998 0.99925@
 %
@@ -58,3 +61,15 @@ homework. (Problem 1)
 1.00003 1.00003@
 %
 \EOF
+
+================================================================================
+
+  Other things to note:
+
+  Notice that the number of values listed for each node is equivalent to the
+one plus number of nodes in the previous layer.
+
+  A "blank" file needs to be created to use for our initial setup of the neural
+net.  This is sufficient to create all the nodes and the necessary edges.
+
+  It may be wise to have a final training output always go to a seperate file.
