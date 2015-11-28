@@ -9,21 +9,18 @@
 /** Node ctor.
  * @param w, The dummy weight associated with this node.
  */
-Node::Node( long double w ) : w_(w)
+Node::Node( LD w ) : w_(w)
 {}
 
 /**
  * Runs the functionality of the individual node.
- * @param data, Data points/values from either input or from previous layer.
- * @param weights, Weight of each edge from the nodes of the previous layer.
- * Should be NULL, on the input layer.
+ * @param data, Data points/values from the previous layer.
  */
-long double Node::operator()( 
-        const vector<long double>& data )
+LD Node::operator()( const vector<LD>& data )
 {
     assert( data.size() == weights_.size() );
 
-    long double output = w_;
+    LD output = w_;
     int size = data.size();
 
     for( int ii = 0; ii < size; ii++ )
@@ -35,10 +32,55 @@ long double Node::operator()(
 }
 
 /**
- * The back propogation algorithm for training the ANN.
+ * The back propogation algorithm for training the ANN.  There are two versions
+ * of this function.  This one trains the output layer.
+ *
+ * @param alpha, The alpha value used to adjust weights.
+ * @param output, This is the value that was output for the pervious run from
+ * the training data.
+ * @param expected, This is the value that was expected from the output layer.
  */
-void train()
+LD Node::train( LD alpha, LD output, LD expected ) 
 {
+    LD delta =  output * ( 1 - output ) * (expected - output);
+
+    //  Dummy weight is always equal to 1 and is, therefore, implicit in this
+    //calculation.
+    w_ = w_ + (alpha * delta);
+
+    return delta;
+}
+
+
+/**
+ * The back propogation algorithm for training the ANN.  There are two versions
+ * of this function.  This one is overloaded to train the hidden layers.
+ *
+ * @param alpha, The alpha value used to adjust weights.
+ * @param output, This is the value that was output for the pervious run from
+ * the training data.
+ * @param y, A vector contain the values pass from training subsequent layers
+ * of the ANN.
+ */
+LD Node::train( LD alpha, LD output, vector<LD>& y )
+{
+    assert( y.size() == weights_.size() );
+
+    LD factor = output * ( 1 - output );
+    LD delta;
+
+    for( unsigned ii = 0; ii < y.size(); ii++ )
+    {
+        delta += y[ii] * weights_[ii];
+    }
+    delta *= factor;
+
+    for( unsigned ii = 0; ii < weights_.size(); ii++ )
+    {
+        weights_[ii] += ( alpha * output * delta );
+    }
+   
+    return delta;
 }
 
 /**
@@ -75,7 +117,7 @@ istream& operator>>( istream& in, Node node )
         return in;
 
     in >> node.w_;
-    long double n = 0;
+    LD n = 0;
 
     while( in.peek() != '@' )
     {
