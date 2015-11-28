@@ -22,17 +22,22 @@ class Node
 {
     public:
         Node( long double );
+        ~Node();
 
-        //      void back_propograte( const vector<long double>* );
         long double operator()( 
-                const vector<long double>&,
                 const vector<long double>& );
+
+        void train();
 
         friend ostream& operator<<( ostream&, Node );
     private:
-        long double w_;
+        long double w_; ///>The dummy weight associated with this node.
+        vector<long double>* weights_; /**> The weights of all the connection
+                                         from the nodes in the previous layer
+                                         of the ANN. **/
 };
 
+ostream& operator>>( ostream&, Node );
 ostream& operator<<( ostream&, Node );
 
 #endif
