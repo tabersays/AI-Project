@@ -25,7 +25,7 @@ $(MAIN): .entry_point.o .node.o #Additional *.o filenames go here.
 .entry_point.o: entry_point.cpp #The name of the *.h file for the main object goes here.
 	$(CXX) $(CXXFLAGS) -c $< -o $@ $(COPYOUTPUT)
 
-.node.o: node.cpp node.h
+.node.o: node.cpp node.h typedefs.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@ $(COPYOUTPUT)
 
 #  Add additional commands for files to be compiled here, just copy/paste the

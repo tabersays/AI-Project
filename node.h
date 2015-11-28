@@ -19,6 +19,8 @@ using std::exp;
 using std::ostream;
 using std::istream;
 
+#include"typedefs.h"
+
 /** All nodes are in either the hidden or output layers, nodes in the input
  * layer will simply be the result of a single image processing function/object
  * generating a vector of numerical inputs for the subsequent layers.
@@ -26,19 +28,19 @@ using std::istream;
 class Node
 {
     public:
-        Node( long double );
+        Node( LD );
         ~Node();
 
-        long double operator()( 
-                const vector<long double>& );
+        LD operator()( const vector<LD>& );
 
-        void train();
+        LD train( LD, LD, LD );
+        LD train( LD, LD, vector<LD>& );
 
         friend ostream& operator<<( ostream&, Node );
         friend istream& operator>>( istream&, Node );
     private:
-        long double w_; ///>The dummy weight associated with this node.
-        vector<long double> weights_; /**> The weights of all the connection
+        LD w_; ///>The dummy weight associated with this node.
+        vector<LD> weights_; /**> The weights of all the connection
                                         from the nodes in the previous layer
                                         of the ANN. **/
 };
