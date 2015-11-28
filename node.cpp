@@ -7,14 +7,14 @@
 #include"node.h"
 
 /** Node ctor.
- * @param w, The dummy weight associated with this node.
+ * @param w The dummy weight associated with this node.
  */
 Node::Node( LD w ) : w_(w)
 {}
 
 /**
  * Runs the functionality of the individual node.
- * @param data, Data points/values from the previous layer.
+ * @param data Data points/values from the previous layer.
  */
 LD Node::operator()( const vector<LD>& data )
 {
@@ -35,10 +35,10 @@ LD Node::operator()( const vector<LD>& data )
  * The back propogation algorithm for training the ANN.  There are two versions
  * of this function.  This one trains the output layer.
  *
- * @param alpha, The alpha value used to adjust weights.
- * @param output, This is the value that was output for the pervious run from
+ * @param alpha The alpha value used to adjust weights.
+ * @param output This is the value that was output for the pervious run from
  * the training data.
- * @param expected, This is the value that was expected from the output layer.
+ * @param expected This is the value that was expected from the output layer.
  */
 LD Node::train( LD alpha, LD output, LD expected ) 
 {
@@ -56,10 +56,10 @@ LD Node::train( LD alpha, LD output, LD expected )
  * The back propogation algorithm for training the ANN.  There are two versions
  * of this function.  This one is overloaded to train the hidden layers.
  *
- * @param alpha, The alpha value used to adjust weights.
- * @param output, This is the value that was output for the pervious run from
+ * @param alpha The alpha value used to adjust weights.
+ * @param output This is the value that was output for the pervious run from
  * the training data.
- * @param y, A vector contain the values pass from training subsequent layers
+ * @param y A vector contain the values passed from training subsequent layers
  * of the ANN.
  */
 LD Node::train( LD alpha, LD output, vector<LD>& y )
