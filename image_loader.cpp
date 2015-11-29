@@ -36,16 +36,18 @@ bool Image_Loader::image_to_vector_bool( void )
 
     // Process the image.
     Vector2u image_size = image.getSize(); // Holds the x and y of an image.
+    x_ = image_size.x;
+    y_ = image_size.y;
 
     Color sample; // Holds the color of each pixel.
-    for(unsigned int x = 0; x < image_size.x; ++x)
+    for(unsigned x = 0; x < x_; ++x)
     {
-        for(unsigned int y = 0; y < image_size.y; ++y)
+        for(unsigned y = 0; y < y_; ++y)
         {
             sample = image.getPixel(x,y);
 
             // RGB seems to return 0 so i added alpha.
-            unsigned int shit = sample.r + sample.g + sample.b + sample.a;
+            unsigned shit = sample.r + sample.g + sample.b + sample.a;
             pixels_.push_back(bool(shit)); // True if any color.
         }
     }

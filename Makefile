@@ -25,7 +25,26 @@ $(MAIN): .entry_point.o .node.o image_loader.o
 	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o $(MAIN) \
 		2>&1 | tee ./Errors/$(MAIN).$(GCCERREXT)
 
-.entry_point.o: entry_point.cpp #The name of the *.h file for the main object goes here.
+# The test program for the image loader, use image_test to compile this.
+image_test: .image_test.o image_loader.o
+	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o image_test \
+		2>&1 | tee ./Errors/$@.$(GCCERREXT)
+
+.image_test.o: image_loader_test.cpp image_loader.h
+	$(CXX) &^ $(CXXFLAGS) \
+		-c $< -o $@ $(COPYOUTPUT)
+
+# The test program for the nodes.
+node_test: .node_test.o .node.o
+	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o node_test \
+		2>&1 | tee ./Errors/$@.$(GCCERREXT)
+
+.node_test.o: node_test.cpp node.h
+	$(CXX) $(CXXFLAGS) \
+		-c $< -o $@ $(COPYOUTPUT)
+
+#The name of the *.h file for the main object goes here. V
+.entry_point.o: entry_point.cpp
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
@@ -33,17 +52,9 @@ $(MAIN): .entry_point.o .node.o image_loader.o
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
-#image_loader.o: .image_loader_bool_vec.o .image_loader_object.o
-#	$(CXX) $(CXXFLAGS) \
-#		-c $^ -o $@ $(COPYOUTPUT)
-
 image_loader.o: image_loader.cpp image_loader.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
-
-#.image_loader_object.o: image_loader_object.cpp image_loader.h
-#	$(CXX) $(CXXFLAGS) \
-#		-c $< -o $@ $(COPYOUTPUT)
 
 #  Add additional commands for files to be compiled here, just copy/paste the
 # previous lines and modify, makes things easy.  Just remember to add the name
@@ -53,4 +64,4 @@ image_loader.o: image_loader.cpp image_loader.h
 # clean when browsing your files with ls, for example.
 
 clean:
-	rm -f .*.o $(MAIN) ./Errors/* a.out
+	rm -f .*.o $(MAIN) image_test node_test ./Errors/* a.out

@@ -37,9 +37,11 @@ class Image_Loader
         bool image_to_vector_bool( void );
         void make_inputs( void );
 
-        vector<short>     inputs_;
+        vector<short>   inputs_;
         vector<bool>    pixels_;
         string          image_name_;
+        unsigned        x_; ///< Image x-dimension.
+        unsigned        y_; ///< Image y-dimension.
 };
 
 #endif
