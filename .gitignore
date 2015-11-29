@@ -35,3 +35,4 @@
 *.gccerr
 documentation/*
 recognize
+!image_loader.o
