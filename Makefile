@@ -25,7 +25,7 @@ $(MAIN): .entry_point.o .node.o image_loader.o
 	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o $(MAIN) \
 		2>&1 | tee ./Errors/$(MAIN).$(GCCERREXT)
 
-# The test program for the image loader, use image_test to compile this.
+# The test program for the image loader, use <make image_test> to compile this.
 image_test: .image_test.o image_loader.o
 	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o image_test \
 		2>&1 | tee ./Errors/$@.$(GCCERREXT)
@@ -34,7 +34,7 @@ image_test: .image_test.o image_loader.o
 	$(CXX) &^ $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
-# The test program for the nodes.
+# The test program for the nodes, use <make node_test> to compile this.
 node_test: .node_test.o .node.o
 	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o node_test \
 		2>&1 | tee ./Errors/$@.$(GCCERREXT)
