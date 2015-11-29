@@ -4,7 +4,8 @@
 #include<SFML/Graphics.hpp> // The library that loads images.
 #include<string>
 #include<vector>
-#include<iostream> // For cerr and testing.
+#include<iostream>          // For cerr and testing.
+#include<cmath>             // For ceiling function for debug.
 
 #include"typedefs.h"
 
@@ -13,6 +14,7 @@ using std::endl;
 using std::cout;
 using std::string;
 using std::vector;
+using std::ceil;
 
 using sf::Image;
 using sf::Vector2u;
@@ -26,6 +28,8 @@ class Image_Loader
 
         void operator()( string );
         char expected( void );
+
+        void print_debug( void );
 
         unsigned size( void )
         { return inputs_.size(); }

@@ -31,7 +31,7 @@ image_test: .image_test.o image_loader.o
 		2>&1 | tee ./Errors/$@.$(GCCERREXT)
 
 .image_test.o: image_loader_test.cpp image_loader.h
-	$(CXX) &^ $(CXXFLAGS) \
+	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
 # The test program for the nodes, use <make node_test> to compile this.
