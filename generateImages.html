@@ -5,7 +5,7 @@
 </head>
 
 <body>
-    <canvas id="canvas" height="40" width="40"></canvas>
+    <canvas id="canvas" height="220px" width="250px"></canvas>
     <br>
     <script>
         var fonts = ['Sans-serif', 'Arial', 'Arial Black', 'Arial Narrow', 'Arial Rounded MT Bold', 'Avant Garde',
@@ -19,13 +19,15 @@
             chars = ['a', 'b', 'c', 'd', 'e'],
             canvas = document.getElementById('canvas'),
             canvasContext = canvas.getContext('2d'),
-            pixels = '40px';
+            pixels = '300px';
+        canvasContext.textAlign = 'center';
+
 
         fonts.forEach(function(font) {
             canvasContext.font = pixels + ' ' +  font;
             chars.forEach(function(char) {
                 canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-                canvasContext.fillText(char, 0, 40);
+                canvasContext.fillText(char, 125, 218);
                 var dataURL = canvas.toDataURL();
                 var link = document.createElement('a');
                 link.setAttribute('download',char + '_'+ font.replace(/ /g, '_') +'.png');
@@ -36,6 +38,9 @@
                 document.body.appendChild(document.createElement('br'));
             });
         });
+        canvasContext.font = pixels + ' Arial';
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        canvasContext.fillText('D', 125, 218);
     </script>
 </body>
 </html>
