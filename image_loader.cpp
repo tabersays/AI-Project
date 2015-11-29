@@ -36,6 +36,7 @@ bool Image_Loader::image_to_vector_bool( void )
 
     // Process the image.
     Vector2u image_size = image.getSize(); // Holds the x and y of an image.
+
     Color sample; // Holds the color of each pixel.
     for(unsigned int x = 0; x < image_size.x; ++x)
     {
@@ -51,10 +52,46 @@ bool Image_Loader::image_to_vector_bool( void )
     return true;
 }
 
-/** Ctor
+/**Loads a new image into the object.
 */
+void Image_Loader::operator()( string filename )
+{
+    image_name_ = filename;
+    pixels_.clear();
+    inputs_.clear();
+    if( !image_to_vector_bool() )
+        throw -1;
+}
+
+/// Dtor
+Image_Loader::~Image_Loader( void )
+{
+    pixels_.clear();
+    inputs_.clear();
+}
+
+/** Ctor
+ * @param i The file name of the image to be loaded at object creation.
+ * During training, the first character of the file name should be the same
+ * as the character in the image.
+ */
 Image_Loader::Image_Loader( string i ) : image_name_(i)
 {
     if( !image_to_vector_bool() )
         throw -1;
+}
+
+/**
+ */
+void Image_Loader::make_inputs( void )
+{
+}
+
+/** For training purposes, gets the expected output of the neural net.
+ * This is just the ASCII-code of the first character of the image file,
+ * which should match the character in the image for proper behaviour.
+ */
+char Image_Loader::expected( void )
+{ 
+    return image_name_[0];
 }
