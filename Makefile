@@ -17,16 +17,33 @@ MAIN = recognize
 #  The following flags are used to duplicate compiler/linker errors and copy
 # the to a text file for easier reference.
 GCCERREXT = gccerr
+SFML_LIB = -lsfml-graphics
 COPYOUTPUT = 2>&1 | tee ./Errors/$<.$(GCCERREXT)
 
-$(MAIN): .entry_point.o .node.o #Additional *.o filenames go here.
-	$(CXX) $(CXXFLAGS) .*.o -o $(MAIN) 2>&1 | tee ./Errors/$(MAIN).$(GCCERREXT)
+#		Additional *.o filenames go here.  V
+$(MAIN): .entry_point.o .node.o image_loader.o 
+	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o $(MAIN) \
+		2>&1 | tee ./Errors/$(MAIN).$(GCCERREXT)
 
 .entry_point.o: entry_point.cpp #The name of the *.h file for the main object goes here.
-	$(CXX) $(CXXFLAGS) -c $< -o $@ $(COPYOUTPUT)
+	$(CXX) $(CXXFLAGS) \
+		-c $< -o $@ $(COPYOUTPUT)
 
 .node.o: node.cpp node.h typedefs.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@ $(COPYOUTPUT)
+	$(CXX) $(CXXFLAGS) \
+		-c $< -o $@ $(COPYOUTPUT)
+
+#image_loader.o: .image_loader_bool_vec.o .image_loader_object.o
+#	$(CXX) $(CXXFLAGS) \
+#		-c $^ -o $@ $(COPYOUTPUT)
+
+image_loader.o: image_loader.cpp image_loader.h
+	$(CXX) $(CXXFLAGS) \
+		-c $< -o $@ $(COPYOUTPUT)
+
+#.image_loader_object.o: image_loader_object.cpp image_loader.h
+#	$(CXX) $(CXXFLAGS) \
+#		-c $< -o $@ $(COPYOUTPUT)
 
 #  Add additional commands for files to be compiled here, just copy/paste the
 # previous lines and modify, makes things easy.  Just remember to add the name
