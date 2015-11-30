@@ -20,11 +20,11 @@ GCCERREXT = gccerr
 SFML_LIB = -lsfml-graphics
 COPYOUTPUT = 2>&1 | tee ./Errors/$<.$(GCCERREXT)
 
-all: $(MAIN) node_test image_test
 
 #		Additional *.o filenames go here.  V
 $(MAIN): .entry_point.o .node.o image_loader.o .ANN.o
-	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o $(MAIN) \
+	$(CXX) $^ \
+		$(CXXFLAGS) $(SFML_LIB) -o $(MAIN) \
 		2>&1 | tee ./Errors/$(MAIN).$(GCCERREXT)
 
 # The test program for the image loader, use <make image_test> to compile this.
@@ -71,3 +71,5 @@ image_loader.o: image_loader.cpp image_loader.h typedefs.h
 
 clean:
 	rm -f .*.o $(MAIN) image_test node_test ./Errors/* a.out
+
+all: $(MAIN) node_test image_test
