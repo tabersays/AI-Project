@@ -12,6 +12,15 @@
 Node::Node( LD w ) : w_(w)
 {}
 
+Node::Node( istream& infile ) 
+{
+    if( load(infile) )
+        return;
+
+    //Load failed.
+    w_ = 1;
+}
+
 /**
  * Runs the functionality of the individual node.
  * @param data Data points/values from the previous layer.
@@ -100,7 +109,7 @@ ostream& operator<<( ostream& out, Node node )
     for( unsigned ii = 0; ii < i; ii++ )
     {
         out << node.weights_[ii];
-        if( ii != i )
+        if( ii != (i - 1) )
             out << " ";
     }
     out << "@\n";
@@ -111,21 +120,23 @@ ostream& operator<<( ostream& out, Node node )
 /**
  * Reads in the saved weights corresponding to a single node.
  */
-istream& operator>>( istream& in, Node node )
+bool Node::load( istream& in )
 {
-    if( !in.good() ) //EOF? File did not open, etc...
-        return in;
+    weights_.clear();
 
-    in >> node.w_;
+    if( !in.good() ) //EOF? File did not open, etc...
+        return false;
+
+    in >> w_;
     LD n = 0;
 
     while( in.peek() != '@' )
     {
         in >> n;
-        node.weights_.push_back(n);
+        weights_.push_back(n);
     }
     in.ignore();
-    return in;
+    return true;
 }
 
 /** Destructor, empties the weights vector.

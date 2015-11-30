@@ -29,6 +29,7 @@ class Node
 {
     public:
         Node( LD );
+        Node( istream& );
         ~Node( void );
 
         LD operator()( const vector<LD>& );
@@ -36,8 +37,9 @@ class Node
         LD train( LD, LD, LD );
         LD train( LD, LD, vector<LD>& );
 
+        bool load( istream& );
+
         friend ostream& operator<<( ostream&, Node );
-        friend istream& operator>>( istream&, Node );
     private:
         LD w_; ///>The dummy weight associated with this node.
         vector<LD> weights_; /**> The weights of all the connection
