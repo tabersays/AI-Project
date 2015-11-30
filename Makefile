@@ -30,7 +30,7 @@ image_test: .image_test.o image_loader.o
 	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o image_test \
 		2>&1 | tee ./Errors/$@.$(GCCERREXT)
 
-.image_test.o: image_loader_test.cpp image_loader.h
+.image_test.o: image_loader_test.cpp image_loader.h typedefs.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
@@ -39,7 +39,7 @@ node_test: .node_test.o .node.o
 	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o node_test \
 		2>&1 | tee ./Errors/$@.$(GCCERREXT)
 
-.node_test.o: node_test.cpp node.h
+.node_test.o: node_test.cpp node.h typedefs.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
@@ -52,7 +52,7 @@ node_test: .node_test.o .node.o
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
-image_loader.o: image_loader.cpp image_loader.h
+image_loader.o: image_loader.cpp image_loader.h typedefs.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
