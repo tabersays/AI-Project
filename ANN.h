@@ -4,6 +4,9 @@
 #ifndef __ANN_H__
 #define __ANN_H__
 
+#include"node.h"
+#include"image_loader.h"
+
 #include<cassert>
 
 #include<cmath>
@@ -18,23 +21,18 @@ using std::cout;
 using std::cerr;
 //using 
 
-#include"image_loader.h"
-#include"node.h"
-
 class ANN
 {
     public:
-        ANN();
+        ANN(char*);
 
     private:
-        Image_Loader input_;
+        Image_Loader* input_;
 
-        //  A dynamically allocated array of vector<Node>s might be
-        //syntactically easier.
-        vector<vector<Node>> hidden_;
+        //  A dynamically allocated array of vector<Node*>s might be
 
-        
-        vector<Node> output_;
+        vector<vector<Node*>> hidden_;
+        vector<Node*> output_;
 };
 
 #endif

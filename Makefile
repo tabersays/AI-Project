@@ -46,7 +46,7 @@ node_test: .node_test.o .node.o
 		-c $< -o $@ $(COPYOUTPUT)
 
 #The name of the *.h file for the main object goes here. V
-.entry_point.o: entry_point.cpp
+.entry_point.o: entry_point.cpp ANN.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
