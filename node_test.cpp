@@ -77,9 +77,9 @@ int main()
 
     vector<LD> mid_layer_deltas;
     mid_layer_deltas.push_back(
-            layers[1][0]->train( 0.01, outputs[0], expected[0], mid_layer[0] ) );
+            layers[1][0]->train( 0.01, outputs[0], expected[0], mid_layer ) );
     mid_layer_deltas.push_back(
-            layers[1][1]->train( 0.01, outputs[1], expected[1], mid_layer[1] ) );
+            layers[1][1]->train( 0.01, outputs[1], expected[1], mid_layer ) );
 
     cout << "\tDeltas:\t\t" << mid_layer_deltas[0] << "\t" << mid_layer_deltas[1] << endl;
 

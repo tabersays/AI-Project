@@ -49,16 +49,18 @@ LD Node::operator()( const vector<LD>& data )
  * the training data.
  * @param expected This is the value that was expected from the output layer.
  */
-LD Node::train( LD alpha, LD output, LD expected, LD input ) 
+LD Node::train( LD alpha, LD output, LD expected, vector<LD>& input ) 
 {
     LD delta =  output * ( 1 - output ) * (expected - output);
 
-    //  Dummy weight is always equal to 1 and is, therefore, implicit in this
+    //  Dummy input is always equal to 1 and is, therefore, implicit in this
     //calculation.
-    w_ += alpha * delta * input;
+    w_ += alpha * delta;
 
     for( unsigned i = 0; i < weights_.size(); i++ )
-        weights_[i] += alpha * delta * input;
+    {       
+        weights_[i] += alpha * delta * input[i];
+    }
 
     return delta;
 }
@@ -73,6 +75,8 @@ LD Node::train( LD alpha, LD output, LD expected, LD input )
  * the training data.
  * @param y A vector containing the deltas passed from training subsequent layers
  * of the ANN.
+ * @param inputs The vector of inputs that were previously passed in for
+ * recognition.
  */
 LD Node::train( LD alpha, LD output, vector<LD>& y, vector<LD>& inputs )
 {

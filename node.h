@@ -34,7 +34,7 @@ class Node
 
         LD operator()( const vector<LD>& );
 
-        LD train( LD, LD, LD, LD );
+        LD train( LD, LD, LD, vector<LD>& );
         LD train( LD, LD, vector<LD>&, vector<LD>& );
 
         bool load( istream& );
