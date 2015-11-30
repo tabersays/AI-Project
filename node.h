@@ -9,15 +9,16 @@
 #define __NODE_H__
 
 #include<cassert>
+
 #include<iostream>
-#include<cmath>
-
-#include<vector>
-
-using std::vector;
-using std::exp;
 using std::ostream;
 using std::istream;
+
+#include<cmath>
+using std::exp;
+
+#include<vector>
+using std::vector;
 
 #include"typedefs.h"
 
