@@ -20,6 +20,8 @@ GCCERREXT = gccerr
 SFML_LIB = -lsfml-graphics
 COPYOUTPUT = 2>&1 | tee ./Errors/$<.$(GCCERREXT)
 
+all: $(MAIN) node_test image_test
+
 #		Additional *.o filenames go here.  V
 $(MAIN): .entry_point.o .node.o image_loader.o 
 	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o $(MAIN) \
