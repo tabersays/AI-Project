@@ -64,8 +64,8 @@ void Image_Loader::operator()( string filename )
     if( !image_to_vector_bool() )
         throw -1;
 
-    rows_ = ceil( x_ / 4.0 );
-    cols_ = ceil( y_ / 4.0 );
+    rows_ = ceil( y_ / 4.0 );
+    cols_ = ceil( x_ / 4.0 );
 
     make_inputs();
 }
@@ -126,8 +126,8 @@ void Image_Loader::print_debug( void )
 {
     char prompt = 0;
 
-    const string BLK = " ";
-    const string WHT = "\033[0;0;47m \033[0m";
+    const string BLK = ".";
+    const string WHT = "\033[0;30;47m.\033[0m";
     const string RED = "\033[0;0;41m \033[0m";
     string LINE = "";
     for( unsigned ii = 0; ii < x_; ii++ )
@@ -201,23 +201,30 @@ void Image_Loader::print_debug( void )
     std::cin >> prompt;
     cerr << string(80,'=');
 
+    //int row = 0;
     if( prompt == 'y' || prompt == 'Y' )
     {
         cerr << endl << "All values are in hexadecimal.";
-        for( unsigned i = 0; i < inputs_.size(); i++ )
+
+        for( unsigned i = 0; i < rows_; i++ )
         {
-            if( !(i % cols_) )
-                cerr << endl;
+            cerr << endl << (i % 10);
+            for( unsigned j = 0; j < cols_; j++ )
+            {
+                int index = (i * cols_) + j;
 
-            if( inputs_[i] != 0 )
-                cerr 
-                    << setw(4) << setbase(16) << setfill('0') 
-                    << inputs_[i] << " ";
-            else
-                cerr << ".... ";
+                if( inputs_[index] != 0 )
+                    cerr 
+                        << setw(4) << setbase(16) << setfill('0') 
+                        << inputs_[index];
+                else
+                    cerr << "....";
+
+                    cerr << " ";
+                    //cerr << (index % 10);
+            }
         }
-
-        cerr << endl;
+        cerr << endl << " ";
     }
     else
     {

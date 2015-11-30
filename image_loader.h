@@ -2,28 +2,32 @@
 #define __IMAGE_LOADER_H__
 
 #include<SFML/Graphics.hpp> // The library that loads images.
+using sf::Image;
+using sf::Vector2u;
+using sf::Color;
+
 #include<string>
+using std::string;
+
 #include<vector>
+using std::vector;
+
 #include<iostream>          // For cerr and testing.
-#include<cmath>             // For ceiling function for debug.
-#include<iomanip>           // For debug output formatting.
-
-#include"typedefs.h"
-
 using std::cerr;
 using std::endl;
 using std::cout;
-using std::string;
-using std::vector;
+
+#include<cmath>             // For ceiling function for debug.
 using std::ceil;
 using std::floor;
+
+#include<iomanip>           // For debug output formatting.
 using std::setw;
 using std::setbase;
 using std::setfill;
 
-using sf::Image;
-using sf::Vector2u;
-using sf::Color;
+#include"typedefs.h"
+
 
 class Image_Loader
 {
