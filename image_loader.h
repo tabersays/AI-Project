@@ -56,7 +56,7 @@ class Image_Loader
         void make_inputs( void );
 
         vector<LD>                  inputs_;
-        vector<unsigned short>      trans_;
+        vector<short>               trans_;
         vector<bool>                pixels_;
         string                      image_name_;
         unsigned                    x_; ///< Image x-dimension.

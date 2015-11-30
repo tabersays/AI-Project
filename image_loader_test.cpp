@@ -20,9 +20,21 @@ int main(int argc, char* argv[] )
     image.print_debug();
 
     cerr
-        << endl << "Array access operator:" << endl;
-    for( unsigned i = 0; i < image.size(); i++ )
-        cerr << image[i] << " ";
+        << string( 80, '=' )
+        << endl << "Test array access (y/n)?\t";
+    char prompt;
+    cin >> prompt;
+
+    if( prompt == 'y' || prompt == 'Y' )
+    {
+        cerr
+            << string( 80, '=' )
+            << endl << "Array access operator (zero values are skipped):" << endl;
+
+        for( unsigned i = 0; i < image.size(); i++ )
+            if( image[i] != 0 )
+                cerr << setw(4) << i << "\t" << setw(8) << image[i] << endl;
+    }
 
     cerr << endl;
 

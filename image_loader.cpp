@@ -81,7 +81,7 @@ void Image_Loader::make_inputs( void )
     {
         for( unsigned x = 0; x < x_; x += 4 )
         {
-            unsigned short val  = 0;
+            short val  = 0;
             unsigned short mask = 0x8000;
             for( unsigned yy = y; yy < (y + 4); yy++ )
             {
@@ -98,7 +98,7 @@ void Image_Loader::make_inputs( void )
     }
 
     for( unsigned ii = 0; ii < trans_.size(); ii++ )
-        inputs_.push_back( trans_[ii] / ((double) 0xffff) );
+        inputs_.push_back( trans_[ii] / ((double) 0x7fff) );
 }
 
 /** Ctor
@@ -118,7 +118,7 @@ Image_Loader::Image_Loader( string i ) : image_name_(i)
 LD Image_Loader::expected( void )
 { 
     LD val = (int) image_name_[0];
-    return val / 0xffff;
+    return val / 0x7fff;
 }
 
 /** Prints debug information.
@@ -144,31 +144,40 @@ void Image_Loader::print_debug( void )
         << "IMAGE DEBUG DATA" << string(32, ' ') << "\033[0m" << endl
         << "\tLOADED FILE DETAILS:" << endl
         << std::string(80,'=') << endl
+
         << "\t\tFile name:\t\t" << image_name_ << endl
         << "\t\tExpected output:\t" << expected()
-        << "\t(" << (char)expected() << ")" << endl
+        << "\t(" << (char)(expected() * 0x7fff) << ")" << endl
+
         << "\tIMAGE DIMENSIONS:" << endl
         << std::string(80,'=') << endl
+
         << "\t\tDimensions:" << endl
         << "\t\t\t(x, y):\t\t(" << x_ << ", " << y_ << ")" << endl
         << "\t\t" << std::string(64, '-') << endl
+
         << "\t\tNumber of Pixels:" << endl
         << "\t\t\tcalculated:\t" << x_ * y_ << endl
         << "\t\t\tread (actual):\t" << pixels_.size() << endl
         << std::string(80,'=') << endl
+
         << "\tNUMBER OF INPUTS:" << endl
         << std::string(80,'=') << endl
+
         << "\t\tQuantity:" << endl
         << "\t\t\tcalculated:\t\t" << rows_ * cols_ << endl
         << "\t\t\tactual:\t\t\t" << trans_.size() << endl
         << "\t\t" << string(64, '-') << endl
+
         << "\t\t\trows:\t\t\t" << rows_ << endl
         << "\t\t\tcolumns:\t\t" << cols_ << endl
         << string(80,'=') << endl
         << string(80,'=') << endl
+
         << "Do you wish to print the pixels as text? (y,n)" << endl
         << "\tWARNING::\tThis can take lots of space!!\t::WARNING" << endl
         << string(80,'=') << endl;
+
     std::cin >> prompt;
     cerr << string(80,'=') << endl;
 
