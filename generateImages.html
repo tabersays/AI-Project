@@ -5,7 +5,10 @@
 </head>
 
 <body>
+    <!--Canvas viewing area height, and width of bounding box-->
     <canvas id="canvas" height="220px" width="252px"></canvas>
+    <br/>
+    <button onclick="downloadAll()">Download</button>
     <br>
     <script>
         var fonts = ['Sans-serif', 'Arial', 'Arial Black', 'Arial Narrow', 'Arial Rounded MT Bold', 'Avant Garde',
@@ -16,31 +19,48 @@
             'Baskerville', 'Times New Roman', 'Monospaced', 'Consolas', 'Courier New', 'Lucida Console',
             'Lucida Sans Typewriter', 'Monaco', 'Andale Mono', 'Fantasy', 'Copperplate', 'Papyrus', 'Script',
             'Brush Script MT'],
-            chars = ['a', 'b', 'c', 'd', 'e'],
-            canvas = document.getElementById('canvas'),
-            canvasContext = canvas.getContext('2d'),
-            pixels = '300px';
+                chars = ['a', 'b', 'c', 'd', 'e'],
+                canvas = document.getElementById('canvas'),
+                canvasContext = canvas.getContext('2d'),
+                pixels = '300px',
+                linkArr = [],
+                drawMiddle = canvas.width/2,
+                drawHeight = canvas.height - 2;
+
         canvasContext.textAlign = 'center';
 
-
+        //make a link for each char
         fonts.forEach(function(font) {
             canvasContext.font = pixels + ' ' +  font;
             chars.forEach(function(char) {
                 canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-                canvasContext.fillText(char, 125, 218);
+                canvasContext.fillText(char, drawMiddle, drawHeight);
                 var dataURL = canvas.toDataURL();
                 var link = document.createElement('a');
-                link.setAttribute('download',char + '_'+ font.replace(/ /g, '_') +'.png');
+                var name = char + '_'+ font.replace(/ /g, '_') +'.png';
+                link.setAttribute('download',name);
                 link.setAttribute('href', dataURL);
-                link.setAttribute('href', dataURL);
+                link.setAttribute('id', name);
+                linkArr.push(name);
                 link.innerHTML = char + '_'+ font;
                 document.body.appendChild(link);
                 document.body.appendChild(document.createElement('br'));
             });
         });
+        //for viewing reference
         canvasContext.font = pixels + ' Arial';
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        canvasContext.fillText('D', 125, 218);
+        canvasContext.fillText('D', drawMiddle, drawHeight);
+
+        //click all the links there is a short timeout so the browser doesn't get overloaded
+        function downloadAll() {
+            linkArr.forEach(function(id) {
+                setTimeout(function() {
+                    var link = document.getElementById(id);
+                    link.click();
+                }, 200);
+            });
+        }
     </script>
 </body>
 </html>
