@@ -82,7 +82,7 @@ LD Node::train( LD alpha, LD output, vector<LD>& y, vector<LD>& inputs )
 {
     assert( y.size() == weights_.size() );
 
-    LD delta = 0.0;
+    LD delta  = 0.0;//w_;
     LD factor = output * ( 1 - output );
     for( unsigned ii = 0; ii < y.size(); ii++ )
     {
