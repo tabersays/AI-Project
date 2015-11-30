@@ -24,6 +24,8 @@
  */
 bool Image_Loader::image_to_vector_bool( void )
 {
+    pixels_.clear();
+
     // Load the image.
     sf::Image image;
     // Return an error and quit if invalid image is loaded.
@@ -59,17 +61,44 @@ bool Image_Loader::image_to_vector_bool( void )
 void Image_Loader::operator()( string filename )
 {
     image_name_ = filename;
-    pixels_.clear();
-    inputs_.clear();
     if( !image_to_vector_bool() )
         throw -1;
+
+    rows_ = ceil( x_ / 4.0 );
+    cols_ = ceil( y_ / 4.0 );
+
+    make_inputs();
 }
 
-/// Dtor
-Image_Loader::~Image_Loader( void )
+/**Converts 4x4 squares of binary pixels into unsigned short ints
+*/
+void Image_Loader::make_inputs( void )
 {
-    pixels_.clear();
     inputs_.clear();
+
+    for( unsigned y = 0; y < y_; y += 4 )
+    {
+        for( unsigned x = 0; x < x_; x += 4 )
+        {
+
+            unsigned short val  = 0;
+            unsigned short mask = 0x8000;
+            for( unsigned yy = y; yy < (y + 4); yy++ )
+            {
+                //                if( row < y_ )
+                //                {
+                for( unsigned offset = x; offset < (x + 4); offset++ )
+                {
+                    if( pixels_[(yy * x_) + offset] && (x_ < offset) )
+                        val |= mask;
+
+                    mask = mask >> 1;
+                }
+                //                }
+            }
+            inputs_.push_back(val);
+        }
+    }
 }
 
 /** Ctor
@@ -79,23 +108,16 @@ Image_Loader::~Image_Loader( void )
  */
 Image_Loader::Image_Loader( string i ) : image_name_(i)
 {
-    if( !image_to_vector_bool() )
-        throw -1;
-}
-
-/**
-*/
-void Image_Loader::make_inputs( void )
-{
+    this->operator()(i);
 }
 
 /** For training purposes, gets the expected output of the neural net.
  * This is just the ASCII-code of the first character of the image file,
  * which should match the character in the image for proper behaviour.
  */
-char Image_Loader::expected( void )
+int Image_Loader::expected( void )
 { 
-    return image_name_[0];
+    return (int) image_name_[0];
 }
 
 /** Prints debug information.
@@ -103,47 +125,69 @@ char Image_Loader::expected( void )
 void Image_Loader::print_debug( void )
 {
     char prompt = 0;
-    cerr
+
+    const string BLK = " ";
+    const string WHT = "\033[0;0;47m \033[0m";
+    const string RED = "\033[0;0;41m \033[0m";
+    string LINE = "";
+    for( unsigned ii = 0; ii < x_; ii++ )
+    {
+        if( !(ii % 4) )
+            LINE += RED;
+        LINE += RED;
+    }
+    LINE += RED;
+
+    cerr 
+        << "\033[1;33;42m" << string(32,' ')
+        << "IMAGE DEBUG DATA" << string(32, ' ') << "\033[0m" << endl
         << "\tLOADED FILE DETAILS:" << endl
         << std::string(80,'=') << endl
         << "\t\tFile name:\t\t" << image_name_ << endl
         << "\t\tExpected output:\t" << expected()
-        << "\t(" << (int)expected() << ")" << endl
+        << "\t(" << (char)expected() << ")" << endl
         << "\tIMAGE DIMENSIONS:" << endl
         << std::string(80,'=') << endl
         << "\t\tDimensions:" << endl
         << "\t\t\t(x, y):\t\t(" << x_ << ", " << y_ << ")" << endl
-        << "\t" << std::string(72, '-') << endl
+        << "\t\t" << std::string(64, '-') << endl
         << "\t\tNumber of Pixels:" << endl
         << "\t\t\tcalculated:\t" << x_ * y_ << endl
         << "\t\t\tread (actual):\t" << pixels_.size() << endl
         << std::string(80,'=') << endl
         << "\tNUMBER OF INPUTS:" << endl
         << std::string(80,'=') << endl
-        << "\t\tcalculated:\t\t";
-
-    int inputs_c = ceil( x_ / 4 ) * ceil( y_ / 4 );
-    cerr
-        << inputs_c << endl
-        << "\t\tactual:\t\t\t" << inputs_.size() << endl
+        << "\t\tQuantity:" << endl
+        << "\t\t\tcalculated:\t\t" << rows_ * cols_ << endl
+        << "\t\t\tactual:\t\t\t" << inputs_.size() << endl
+        << "\t\t" << string(64, '-') << endl
+        << "\t\t\trows:\t\t\t" << rows_ << endl
+        << "\t\t\tcolumns:\t\t" << cols_ << endl
         << string(80,'=') << endl
         << string(80,'=') << endl
         << "Do you wish to print the pixels as text? (y,n)" << endl
-        << "\tWARNING::\t This takes lots of space!!\t::WARNING" << endl
+        << "\tWARNING::\tThis can take lots of space!!\t::WARNING" << endl
         << string(80,'=') << endl;
     std::cin >> prompt;
-    cerr << string(80,'=');
+    cerr << string(80,'=') << endl;
 
     if( prompt == 'y' || prompt == 'Y' )
     {
-        for( unsigned ii = 0; ii < pixels_.size(); ii++ )
-        {
-            if( !(ii % x_ ) )
-                cerr << endl;
-            cerr << ((pixels_[ii]) ? "X" : ".");
 
+        for( unsigned jj = 0; jj < y_; jj++ )
+        {
+            if( !(jj % 4 ))
+                cerr << LINE << endl;
+            for( unsigned ii = 0; ii < x_; ii++ )
+            {
+                if( !(ii % 4) )
+                    cerr << RED;
+
+                cerr << "\033[0m" << ((pixels_[(jj*y_) + ii]) ? BLK : WHT );
+            }
+            cerr << RED << endl;
         }
-        cerr << endl << string(80,'=') << endl;
+        cerr << LINE << endl << string(80,'=') << endl;
     }
     else
     {
@@ -159,16 +203,33 @@ void Image_Loader::print_debug( void )
 
     if( prompt == 'y' || prompt == 'Y' )
     {
-        if( !(ii % (y_ / 4)) )
-            cerr << endl;
+        cerr << endl << "All values are in hexadecimal.";
+        for( unsigned i = 0; i < inputs_.size(); i++ )
+        {
+            if( !(i % cols_) )
+                cerr << endl;
 
-        for( unsigned ii = 0; ii < inputs_.size(); ii++ )
-            cerr << inputs_[i] << " "
+            if( inputs_[i] != 0 )
+                cerr 
+                    << setw(4) << setbase(16) << setfill('0') 
+                    << inputs_[i] << " ";
+            else
+                cerr << ".... ";
+        }
+
+        cerr << endl;
     }
     else
     {
-       cerr << "\n\tInput layer was not printed" << endl;
+        cerr << "\n\tInput layer was not printed" << endl;
     }
 
     cerr << endl;
+}
+
+/// Dtor
+Image_Loader::~Image_Loader( void )
+{
+    pixels_.clear();
+    inputs_.clear();
 }
