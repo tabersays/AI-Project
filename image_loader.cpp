@@ -89,7 +89,7 @@ void Image_Loader::make_inputs( void )
                 //                {
                 for( unsigned offset = x; offset < (x + 4); offset++ )
                 {
-                    if( pixels_[(yy * x_) + offset] && (x_ < offset) )
+                    if( pixels_[(yy * x_) + offset] )
                         val |= mask;
 
                     mask = mask >> 1;
@@ -183,7 +183,7 @@ void Image_Loader::print_debug( void )
                 if( !(ii % 4) )
                     cerr << RED;
 
-                cerr << "\033[0m" << ((pixels_[(jj*y_) + ii]) ? BLK : WHT );
+                cerr << "\033[0m" << ((pixels_[(jj*x_) + ii]) ? BLK : WHT );
             }
             cerr << RED << endl;
         }
