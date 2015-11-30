@@ -77,17 +77,18 @@ int main()
 
     vector<LD> mid_layer_deltas;
     mid_layer_deltas.push_back(
-            layers[1][0]->train( 0.01, outputs[0], expected[0] ) );
+            layers[1][0]->train( 0.01, outputs[0], expected[0], mid_layer[0] ) );
     mid_layer_deltas.push_back(
-            layers[1][1]->train( 0.01, outputs[1], expected[1] ) );
+            layers[1][1]->train( 0.01, outputs[1], expected[1], mid_layer[1] ) );
 
     cout << "\tDeltas:\t\t" << mid_layer_deltas[0] << "\t" << mid_layer_deltas[1] << endl;
 
     cout << "1st hidden layer delta:\t" <<
-        layers[0][0]->train( 0.01, mid_layer[0], mid_layer_deltas ) << endl;
+        layers[0][0]->train( 0.01, mid_layer[0], mid_layer_deltas, inputs ) << endl;
 
     cout
         << string( 80, '=' ) << endl
+        << "There are rounding errors here:" << endl
         << "\tw3:\t" << *layers[0][0]
         << "\tw4:\t" << *layers[1][0]
         << "\tw5:\t" << *layers[1][1] << endl;

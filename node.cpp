@@ -49,13 +49,16 @@ LD Node::operator()( const vector<LD>& data )
  * the training data.
  * @param expected This is the value that was expected from the output layer.
  */
-LD Node::train( LD alpha, LD output, LD expected ) 
+LD Node::train( LD alpha, LD output, LD expected, LD input ) 
 {
     LD delta =  output * ( 1 - output ) * (expected - output);
 
     //  Dummy weight is always equal to 1 and is, therefore, implicit in this
     //calculation.
-    w_ = w_ + (alpha * delta);
+    w_ += alpha * delta * input;
+
+    for( unsigned i = 0; i < weights_.size(); i++ )
+        weights_[i] += alpha * delta * input;
 
     return delta;
 }
@@ -68,25 +71,25 @@ LD Node::train( LD alpha, LD output, LD expected )
  * @param alpha The alpha value used to adjust weights.
  * @param output This is the value that was output for the pervious run from
  * the training data.
- * @param y A vector contain the values passed from training subsequent layers
+ * @param y A vector containing the deltas passed from training subsequent layers
  * of the ANN.
  */
-LD Node::train( LD alpha, LD output, vector<LD>& y )
+LD Node::train( LD alpha, LD output, vector<LD>& y, vector<LD>& inputs )
 {
     assert( y.size() == weights_.size() );
 
+    LD delta = 0.0;
     LD factor = output * ( 1 - output );
-    LD delta;
-
     for( unsigned ii = 0; ii < y.size(); ii++ )
     {
         delta += y[ii] * weights_[ii];
     }
     delta *= factor;
 
+    w_ += alpha * delta;
     for( unsigned ii = 0; ii < weights_.size(); ii++ )
     {
-        weights_[ii] += ( alpha * output * delta );
+        weights_[ii] += ( alpha * inputs[ii] * delta );
     }
    
     return delta;

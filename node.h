@@ -34,8 +34,8 @@ class Node
 
         LD operator()( const vector<LD>& );
 
-        LD train( LD, LD, LD );
-        LD train( LD, LD, vector<LD>& );
+        LD train( LD, LD, LD, LD );
+        LD train( LD, LD, vector<LD>&, vector<LD>&, vector<LD>& );
 
         bool load( istream& );
 
@@ -47,8 +47,6 @@ class Node
                                         of the ANN. **/
 };
 
-/** For loading a node from file.*/
-istream& operator>>( istream&, Node );
 /** For outputing a node to the screen or to a file. */
 ostream& operator<<( ostream&, Node );
 
