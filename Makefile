@@ -23,7 +23,7 @@ COPYOUTPUT = 2>&1 | tee ./Errors/$<.$(GCCERREXT)
 all: $(MAIN) node_test image_test
 
 #		Additional *.o filenames go here.  V
-$(MAIN): .entry_point.o .node.o image_loader.o 
+$(MAIN): .entry_point.o .node.o image_loader.o .ANN.o
 	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o $(MAIN) \
 		2>&1 | tee ./Errors/$(MAIN).$(GCCERREXT)
 
@@ -55,6 +55,10 @@ node_test: .node_test.o .node.o
 		-c $< -o $@ $(COPYOUTPUT)
 
 image_loader.o: image_loader.cpp image_loader.h typedefs.h
+	$(CXX) $(CXXFLAGS) \
+		-c $< -o $@ $(COPYOUTPUT)
+
+.ANN.o: ANN.cpp ANN.h image_loader.h node.h typedefs.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
