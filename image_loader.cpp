@@ -74,19 +74,17 @@ void Image_Loader::operator()( string filename )
 */
 void Image_Loader::make_inputs( void )
 {
+    trans_.clear();
     inputs_.clear();
 
     for( unsigned y = 0; y < y_; y += 4 )
     {
         for( unsigned x = 0; x < x_; x += 4 )
         {
-
             unsigned short val  = 0;
             unsigned short mask = 0x8000;
             for( unsigned yy = y; yy < (y + 4); yy++ )
             {
-                //                if( row < y_ )
-                //                {
                 for( unsigned offset = x; offset < (x + 4); offset++ )
                 {
                     if( pixels_[(yy * x_) + offset] )
@@ -94,11 +92,13 @@ void Image_Loader::make_inputs( void )
 
                     mask = mask >> 1;
                 }
-                //                }
             }
-            inputs_.push_back(val);
+            trans_.push_back(val);
         }
     }
+
+    for( unsigned ii = 0; ii < trans_.size(); ii++ )
+        inputs_.push_back( trans_[ii] / ((double) 0xffff) );
 }
 
 /** Ctor
@@ -115,9 +115,10 @@ Image_Loader::Image_Loader( string i ) : image_name_(i)
  * This is just the ASCII-code of the first character of the image file,
  * which should match the character in the image for proper behaviour.
  */
-int Image_Loader::expected( void )
+LD Image_Loader::expected( void )
 { 
-    return (int) image_name_[0];
+    LD val = (int) image_name_[0];
+    return val / 0xffff;
 }
 
 /** Prints debug information.
@@ -159,7 +160,7 @@ void Image_Loader::print_debug( void )
         << std::string(80,'=') << endl
         << "\t\tQuantity:" << endl
         << "\t\t\tcalculated:\t\t" << rows_ * cols_ << endl
-        << "\t\t\tactual:\t\t\t" << inputs_.size() << endl
+        << "\t\t\tactual:\t\t\t" << trans_.size() << endl
         << "\t\t" << string(64, '-') << endl
         << "\t\t\trows:\t\t\t" << rows_ << endl
         << "\t\t\tcolumns:\t\t" << cols_ << endl
@@ -201,7 +202,6 @@ void Image_Loader::print_debug( void )
     std::cin >> prompt;
     cerr << string(80,'=');
 
-    //int row = 0;
     if( prompt == 'y' || prompt == 'Y' )
     {
         cerr << endl << "All values are in hexadecimal.";
@@ -213,15 +213,14 @@ void Image_Loader::print_debug( void )
             {
                 int index = (i * cols_) + j;
 
-                if( inputs_[index] != 0 )
+                if( trans_[index] != 0 )
                     cerr 
                         << setw(4) << setbase(16) << setfill('0') 
-                        << inputs_[index];
+                        << trans_[index];
                 else
                     cerr << "....";
 
                     cerr << " ";
-                    //cerr << (index % 10);
             }
         }
         cerr << endl << " ";
@@ -239,4 +238,5 @@ Image_Loader::~Image_Loader( void )
 {
     pixels_.clear();
     inputs_.clear();
+    trans_.clear();
 }
