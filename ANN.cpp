@@ -4,7 +4,7 @@
  *   @file ANN.cpp
  *
  *   @author Michael Taylor
- *   @author Matt ?
+ *   @author Mark Moniz
  *   @author Thomas Russel Carrel
  */
 
