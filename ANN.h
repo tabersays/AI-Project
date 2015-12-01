@@ -35,10 +35,13 @@ class ANN
         ANN( void );
         ~ANN( void );
 
-        bool load(char *);
+        bool load( char* );
         bool save();
 
-        void load_image( string );
+        LD run();
+        void back_propagate( LD );
+
+        bool load_image( string );
     private:
         void clear();
 

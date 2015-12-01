@@ -19,79 +19,116 @@ using std::cerr;
 using std::cout;
 using std::cin;
 using std::endl;
+using std::flush;
 
-//using namespace std;
+#include<cmath>
+using std::round;
 
 #include"ANN.h"
 #include"directory.h"
 
-int run_net( ANN& /*network*/ )
+int run_net( ANN& network )
 {
-  return 0;
+    string image_file;
+    char loop = 0;
+
+    while( loop != 'y' && loop != 'Y' )
+    {
+        cout
+            << "\033[2J"; //Clear the screen.
+        cout
+            << "Enter mage file name (and path):" << endl 
+            << "\t$ " << flush;
+        cin >> image_file;
+        bool loaded = network.load_image( image_file );
+
+        while( !loaded )
+        {
+            cout
+                << "Could not open file <" << image_file << ">, please enter "
+                << "a different file." << endl << "\t$ " << flush;
+            loaded = network.load_image( image_file );
+        }
+        LD result = network.run();
+
+        cout << "Your image was the letter '" << (char)round(result * 128) << endl;
+
+        cout
+            << "Do you wish to try another image? (y/n)" << endl << "\t$ ";
+        cin >> loop;
+        cout
+            << "Entered [" << loop << "]." << endl;
+    }
+
+    return 0;
 }
 
-int train_net( ANN& /*network*/, string name )
+int train_net( ANN& network, string name )
 {
-  Directory dir(name);
-  cout << "File index to start at, should be 0 unless crash?" << endl;
-  unsigned file_index = 0;
-  cin >> file_index;
-  cout << "Number of training steps, 0 to go through the entire directory."
-    << endl;
-  unsigned step = 0;
-  cin >> step;
+    Directory dir(name);
+    cout << "File index to start at, should be 0 unless crash?" << endl;
+    unsigned file_index = 0;
+    cin >> file_index;
+    cout << "Number of training steps, 0 to go through the entire directory."
+        << endl;
+    unsigned last_step = 0;
+    cin >> last_step;
 
-  // Set step to size of oyr training set.
-  if(step == 0)
-    step = dir.file().size();
+    // Set step to size of oyr training set.
+    if( last_step != 0 )
+        last_step += file_index;
+    else
+        last_step = dir.file().size();
 
 
-  ofstream training_progress;
-  training_progress.open( "ann_training_step" );
+    ofstream training_progress;
+    training_progress.open( "ann_training_step" );
 
-  if( !training_progress.is_open() )
-    return 1;
+    if( !training_progress.is_open() )
+        return 1;
 
-  for(unsigned i = 0; i < step; ++i)
-  {
-    cout << dir.file()[i] << endl;
-  }
-  return 0;
+    for(unsigned i = file_index; i < last_step; ++i)
+    {
+        network.load_image( dir.file()[i] );
+        network.back_propagate( network.run() );
+        network.save();
+    }
+    return 0;
 }
 
 int main( int argc, char* argv[] )
 {
-  if( argc < 2 )
-  {
-    cerr
-      << "\tUsage:" << endl
-      << "\t\t" << argv[0] << " <filename> [optional]<directory>" << endl
-      << "\t\t\t<filename>\tThe saved ANN configuration file." << endl
-      << "\t\t\t<directory>\tThe directory containing training data.\n"
-      << endl;
-    return 1;
-  }
+    if( argc < 2 )
+    {
+        cerr
+            << "\tUsage:" << endl
+            << "\t\t" << argv[0] << " <filename> [optional]<directory>" << endl
+            << "\t\t\t<filename>\tThe saved ANN configuration file." << endl
+            << "\t\t\t<directory>\tThe directory containing training data.\n"
+            << endl;
+        return 1;
+    }
 
-  ANN network;
-  if( !network.load( argv[1] ) )
-  {
-    cerr << "Could not load file <" << argv[1] << ">.\n" << endl;
-    return 1;
-  }
+    ANN network;
+    if( !network.load( argv[1] ) )
+    {
+        cerr << "Could not load file <" << argv[1] << ">.\n" << endl;
+        return 1;
+    }
 
-  // Cannot create variables within a switch statement.
-  string dir;
-  if( argc == 3 )
-    dir = argv[2];
+    // Cannot create variables within a switch statement.
+    string dir;
+    if( argc == 3 )
+        dir = argv[2];
 
-  switch( argc )
-  {
-    case 2:
-      return run_net( network );
-    case 3:
-      return train_net( network, dir );
-    default:
-      cerr << "\tToo many arguments.\n" << endl;
-      return 1;
-  }
+    switch( argc )
+    {
+        case 2:
+            return run_net( network );
+        case 3:
+            return train_net( network, dir );
+        default:
+            cerr << "\tToo many arguments.\n" << endl;
+            return 1;
+    }
 }

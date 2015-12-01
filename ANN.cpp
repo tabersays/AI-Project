@@ -109,16 +109,26 @@ bool ANN::save()
     return true;
 }
 
-void ANN::load_image( string filename )
+LD ANN::run()
+{
+}
+
+void ANN::back_propagate( LD )
+{
+}
+
+bool ANN::load_image( string filename )
 {
     if( input_ )
     {
-        
+        input_->new_image( filename );
     }
     else
     {
         input_ = new Image_Loader( filename );
     }
+
+    return !input_.is_loaded();
 }
 
 /**
