@@ -2,7 +2,7 @@
  * Node class definitions.
  *
  * @author Thomas R. Carrel
- * @file Node.cpp
+ * @file node.cpp
  */
 #include"node.h"
 
@@ -45,9 +45,11 @@ LD Node::operator()( const vector<LD>& data )
  * of this function.  This one trains the output layer.
  *
  * @param alpha The alpha value used to adjust weights.
- * @param output This is the value that was output for the pervious run from
+ * @param output This is the value that was output from the pervious run from
  * the training data.
  * @param expected This is the value that was expected from the output layer.
+ * @param input The inputs that were given with the recognition of the previous
+ * training input.
  */
 LD Node::train( LD alpha, LD output, LD expected, vector<LD>& input ) 
 {

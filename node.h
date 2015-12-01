@@ -2,7 +2,7 @@
  * Node class declaration.
  *
  * @author Thomas R. Carrel
- * @file Node.h
+ * @file node.h
  */
 
 #ifndef __NODE_H__
