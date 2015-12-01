@@ -38,6 +38,7 @@ class ANN
         bool load(char *);
         bool save();
 
+        void load_image( string );
     private:
         void clear();
 
