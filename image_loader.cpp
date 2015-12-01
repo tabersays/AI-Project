@@ -8,6 +8,30 @@
 
 #include"image_loader.h"
 
+
+/**
+ * image_resize
+ *
+ * Resize the input image to a constant size for processing.
+ *
+ */
+
+sf::Image Image_Loader::image_resize( void )
+{
+  // Load the image.
+  sf::Image image;
+  // Return an error and quit if invalid image is loaded.
+  change_state( image.loadFromFile(image_name_ ));
+  if(!image_load_state_)
+  {
+    cerr << "could not load image. " << image_load_state_ << endl;
+    return image;
+  }
+  cerr << image_load_state_ << endl;
+  // TODO resize work
+  return image;
+}
+
 /**
  * image_to_vector_bool
  *
@@ -19,9 +43,9 @@ bool Image_Loader::image_to_vector_bool( void )
     pixels_.clear();
 
     // Load the image.
-    sf::Image image;
+    sf::Image image = image_resize();
     // Return an error and quit if invalid image is loaded.
-    if(!image.loadFromFile(image_name_))
+    if(!image_load_state_)
     {
         cerr << "ERROR: Could not load image <" <<
             image_name_ << ">. Try .png file type." << endl;
@@ -108,7 +132,7 @@ Image_Loader::Image_Loader( string i ) : image_name_(i)
  * which should match the character in the image for proper behaviour.
  */
 LD Image_Loader::expected( void )
-{ 
+{
     LD val = (int) image_name_[0];
     return val / 0x7fff;
 }
@@ -131,7 +155,7 @@ void Image_Loader::print_debug( void )
     }
     LINE += RED;
 
-    cerr 
+    cerr
         << "\033[1;33;42m" << string(32,' ')
         << "IMAGE DEBUG DATA" << string(32, ' ') << "\033[0m" << endl
         << "\tLOADED FILE DETAILS:" << endl
@@ -215,8 +239,8 @@ void Image_Loader::print_debug( void )
                 int index = (i * cols_) + j;
 
                 if( trans_[index] != 0 )
-                    cerr 
-                        << setw(4) << setbase(16) << setfill('0') 
+                    cerr
+                        << setw(4) << setbase(16) << setfill('0')
                         << trans_[index];
                 else
                     cerr << "....";

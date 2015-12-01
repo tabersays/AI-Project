@@ -50,13 +50,19 @@ class Image_Loader
         const LD& operator[]( int a )
         { return inputs_[a]; }
 
+        bool is_loaded( void )
+        { return image_load_state_; }
+
 
     private:
         Image_Loader() {} //Force use of the other ctor.
-
+        void change_state( bool state )
+        { image_load_state_ = state; }
+        sf::Image image_resize( void );
         bool image_to_vector_bool( void );
         void make_inputs( void );
 
+        bool                        image_load_state_;
         vector<LD>                  inputs_;
         vector<short>               trans_;
         vector<bool>                pixels_;
@@ -68,5 +74,4 @@ class Image_Loader
         unsigned                    cols_;
 
 };
-
 #endif
