@@ -73,7 +73,13 @@ int main( int argc, char* argv[] )
         return 1;
     }
 
-    ANN network( argv[1] );
+    ANN network;
+    if( !network.load( argv[1] ) )
+    {
+        cerr << "Could not load file <" << argv[1] << ">.\n" << endl;
+        return 1;
+    }
+
 
     // Cannot create variables within a switch statement.
     string dir;

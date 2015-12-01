@@ -25,12 +25,15 @@ using std::cout;
 using std::cerr;
 
 #include<ctime>
-//using 
+
+#include<cctype>
+using std::isspace;
 
 class ANN
 {
     public:
-        ANN(char*);
+        ANN( void );
+        ~ANN( void );
 
         bool load(char *);
         bool save();
@@ -40,10 +43,10 @@ class ANN
 
         void clear();
 
-        //  A dynamically allocated array of vector<Node*>s might be
-
-        vector<vector<Node*> > hidden_;
+        vector<vector<Node*>> hidden_;
         vector<Node*> output_;
+
+        vector<vector<LD>>   edges_;
 };
 
 #endif

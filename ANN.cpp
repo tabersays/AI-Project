@@ -12,13 +12,8 @@
 
 #include"ANN.h"
 
-/** ANN ctor
- * @param file The (un)trained ANN to load.
- */
-ANN::ANN( char* file )
-{
-    load(file);
-}
+ANN::ANN() : input_(NULL)
+{}
 
 /** Loads a saved ANN.
  * @param file The name (and optionally, path) to load.
@@ -27,26 +22,50 @@ bool ANN::load( char* file )
 {
     ifstream inf;
     inf.open( file );
-    if(inf.fail())
+
+    if( inf.fail() )
     {
         return false;
     }
+
     int entry_nodes = 0;
-    int layers = 0;
-    inf.getline(file, entry_nodes);
-    inf.getline(file, layers);
-    while(!inf.eof() )
+    unsigned layers = 0;
+    inf >> entry_nodes;
+    inf >> layers;
+    //Ignore leading whitespace (newline)
+    while( isspace( inf.peek() ) )
+        inf.ignore();
+
+    while( !inf.eof() )
     {
+        cerr << "." << endl;
+
         vector<Node*> layer;
-        while(inf.peek() != '%')
+        while( !inf.eof() && inf.peek() != '%' )
         {
-            layer.push_back(new Node(inf));
+//            cerr << inf.peek();
+            Node* n = new Node(inf);
+            layer.push_back( n );
+            cerr << *n;
+
+            while( isspace( inf.peek() ) )
+                inf.ignore();
         }
-        hidden_.push_back(layer);
-        inf.ignore();
-        inf.ignore();
+//        cerr << endl;
+
+        hidden_.push_back( layer );
+        vector<LD> W;
+        edges_.push_back(W);
+
+        char dummy = 0;
+        while( dummy != '%' )
+            inf >> dummy;
     }
-    return true;
+
+    //    unsigned o_layer = hidden_.size() - 1;
+
+
+    return layers == hidden_.size() + 1;
 }
 
 /** Used to save a trained ANN and backup during training.
@@ -61,16 +80,42 @@ bool ANN::save()
     of << hidden_[0].size();//
 
     for(std::vector<vector<Node*> >::iterator layer = hidden_.begin();
-        layer != hidden_.end();
-        layer++)
+            layer != hidden_.end();
+            layer++)
     {
         for(std::vector<Node*>::iterator node = layer->begin();
-            node != layer->end();
-            node++)
+                node != layer->end();
+                node++)
         {
-          of << *node;
+            of << *node;
         }
         of << "%\n\n";
     }
     return true;
+}
+
+/**
+ * ANN dtor
+ *
+ * THIS IS UNTEST SO ANY SEG FAULTS ARE LIKELY TO BE FROM HERE.
+ */
+ANN::~ANN( void )
+{
+    if( input_ )
+        delete input_;
+
+    for( unsigned k = 0; k < hidden_.size(); k++ )
+    {
+        for( unsigned l = 0; l < hidden_[k].size(); l++ )
+        {
+            if( hidden_[k][l] )
+                delete hidden_[k][l];
+        }
+        hidden_[k].clear();
+    }
+
+    for( unsigned m = 0; m < output_.size(); m++ )
+        if( output_[m] )
+            delete output_[m];
+    output_.clear();
 }
