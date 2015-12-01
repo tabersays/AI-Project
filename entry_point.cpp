@@ -8,11 +8,14 @@
 
 
 #include<fstream>
+#include<string>
 #include<iostream>
 using std::cerr;
 using std::cout;
 using std::cin;
 using std::endl;
+
+using namespace std;
 
 #include"ANN.h"
 #include"directory.h"
@@ -26,7 +29,6 @@ bool run_net( )// ANN& network )
 bool train_net( ANN& network, string name )
 {
   Directory dir(name);
-
   cout << "File index to start at, should be 0 unless crash?" << endl;
   unsigned file_index = 0;
   cin >> file_index;
@@ -36,7 +38,7 @@ bool train_net( ANN& network, string name )
   cin >> step;
 
   // Set step to size of oyr training set.
-  if(step = 0)
+  if(step == 0)
     step = dir.file().size();
 
 
@@ -46,7 +48,7 @@ bool train_net( ANN& network, string name )
   if( !training_progress.is_open() )
     return false;
 
-  for(unsigned i = 0; i < count; --i)
+  for(unsigned i = 0; i < step; --i)
   {
 
     while( dir.file().size() )// Number of training iterations
@@ -57,7 +59,7 @@ bool train_net( ANN& network, string name )
   }
   return false;
 }
-;
+
 int main( int argc, char* argv[] )
 {
   if( argc < 2 )
@@ -76,7 +78,8 @@ int main( int argc, char* argv[] )
   switch( argc )
   {
     case 2:
-      return run_net( network );
+      string dir = argv[2];
+      return run_net( network, dir );
     case 3:
       //            return train_net( network );
       cerr << 3; return 0;
