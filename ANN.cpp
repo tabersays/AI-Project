@@ -1,15 +1,29 @@
-
+/**
+ *   Definitions for the ANN object.
+ *
+ *   @file ANN.cpp
+ *
+ *   @author Michael Taylor
+ *   @author Matt ?
+ *   @author Thomas Russel Carrel
+ */
 
 
 
 #include"ANN.h"
 
+/** ANN ctor
+ * @param file The (un)trained ANN to load.
+ */
 ANN::ANN( char* file )
 {
     load(file);
 }
 
-bool ANN::load( char* file)
+/** Loads a saved ANN.
+ * @param file The name (and optionally, path) to load.
+ */
+bool ANN::load( char* file )
 {
     ifstream inf;
     inf.open( file );
@@ -35,6 +49,9 @@ bool ANN::load( char* file)
     return true;
 }
 
+/** Used to save a trained ANN and backup during training.
+ * The file name is predetermined.
+ */
 bool ANN::save()
 {
     ofstream of;
