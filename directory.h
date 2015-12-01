@@ -4,6 +4,8 @@
 
 #include<iostream>
 using std::string;
+using std::cout;
+using std::endl;
 
 #include<dirent.h>
 
@@ -13,13 +15,12 @@ using std::vector;
 class Directory
 {
     public:
-        Directory(void);
         Directory(string);
 
-        const vector<char*>& file()
+        const vector<string>& file()
         { return files_; }
     private:
         int current_;
-        vector<char*> files_;
+        vector<string> files_;
 };
 #endif
