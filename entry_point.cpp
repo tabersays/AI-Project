@@ -15,6 +15,7 @@ using std::cin;
 using std::endl;
 
 #include"ANN.h"
+#include"directory.h"
 
 bool run_net( )// ANN& network )
 {

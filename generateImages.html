@@ -6,9 +6,10 @@
 
 <body>
     <!--Canvas viewing area height, and width of bounding box-->
-    <canvas id="canvas" height="220px" width="252px"></canvas>
+    <canvas id="canvas" height="300px" width="252px"></canvas>
     <br/>
     <button onclick="downloadAll()">Download</button>
+    <button onclick="downloadAllDirty()">Dirty</button>
     <br>
     <script>
         var fonts = ['Sans-serif', 'Arial', 'Arial Black', 'Arial Narrow', 'Arial Rounded MT Bold', 'Avant Garde',
@@ -25,7 +26,27 @@
                 pixels = '300px',
                 linkArr = [],
                 drawMiddle = canvas.width/2,
-                drawHeight = canvas.height - 2;
+                drawHeight = canvas.height - 80,
+                randomInt = function(min, max) {
+                    return Math.floor(Math.random() * (max - min)) + min;
+                },
+                randomColor = function() {
+                    var colors = ['red', 'blue', 'white', 'black', 'green'];
+                    return colors[randomInt(0, colors.length)];
+                },
+                randomLetter = function() {
+                    var letters = ['a', 'b', 'c', 'd', 'e'];
+                    return letters[randomInt(0, letters.length)];
+                },
+                randomLocation = function() {
+                    var height = randomInt(0, canvas.height);
+                    var width = randomInt(0, canvas.width);
+                    return [height, width];
+                },
+                randomFont = function() {
+                    return fonts[randomInt(0, fonts.length)];
+                },
+                dirtyLinkArr = [];
 
         canvasContext.textAlign = 'center';
 
@@ -47,18 +68,65 @@
                 document.body.appendChild(document.createElement('br'));
             });
         });
+
+        // random changes/error
+        for (var i = 0; i < 1000; i++) {
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+            var newFont = randomFont();
+            canvasContext.font = pixels + ' ' +  newFont;
+            var letter = randomLetter();
+            canvasContext.fillText(letter, drawMiddle, drawHeight);
+            var amountOfErrorPixes = randomInt(0, 30000);
+            for (var j = 0; j < amountOfErrorPixes; j++) {
+                var color = randomColor();
+                var randomLocationForPixel = randomLocation();
+                canvasContext.fillStyle = color;
+
+                if(Math.floor(Math.random() * 10) % 2 === 0) {
+                    canvasContext.globalAlpha = 0;
+                }
+                canvasContext.fillRect(randomLocationForPixel[1], randomLocationForPixel[0], 1, 1);
+                canvasContext.globalAlpha = 1;
+
+                canvasContext.fillStyle = 'black';
+            }
+            var dataURL = canvas.toDataURL();
+            var link = document.createElement('a');
+            var name = letter + '_'+ newFont.replace(/ /g, '_') + '_dirty_' + i + '.png';
+            link.setAttribute('download',name);
+            link.setAttribute('href', dataURL);
+            link.setAttribute('id', name);
+            dirtyLinkArr.push(name);
+            link.innerHTML = letter + '_' + newFont + '_dirty_' + i;
+            document.body.appendChild(link);
+            document.body.appendChild(document.createElement('br'));
+        }
+
         //for viewing reference
-        canvasContext.font = pixels + ' Arial';
+        /*canvasContext.font = pixels + ' Arial';
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        canvasContext.fillText('D', drawMiddle, drawHeight);
+        canvasContext.fillText('g', drawMiddle, drawHeight);*/
 
         //click all the links there is a short timeout so the browser doesn't get overloaded
         function downloadAll() {
+            var h = 0;
             linkArr.forEach(function(id) {
+                h++;
                 setTimeout(function() {
                     var link = document.getElementById(id);
                     link.click();
-                }, 200);
+                }, 200*h);
+            });
+        }
+
+        function downloadAllDirty() {
+            var h = 0;
+            dirtyLinkArr.forEach(function(id) {
+                h++;
+                setTimeout(function() {
+                    var link = document.getElementById(id);
+                    link.click();
+                }, 100*h);
             });
         }
     </script>

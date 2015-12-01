@@ -22,14 +22,14 @@ COPYOUTPUT = 2>&1 | tee ./Errors/$<.$(GCCERREXT)
 
 
 #		Additional *.o filenames go here.  V
-$(MAIN): .entry_point.o .node.o .image_loader.o .ANN.o
+$(MAIN): .entry_point.o .node.o .image_loader.o .ANN.o .directory.o
 	$(CXX) $^ \
 		$(CXXFLAGS) $(SFML_LIB) -o $(MAIN) \
 		2>&1 | tee ./Errors/$(MAIN).$(GCCERREXT)
 
 # The test program for the image loader, use <make image_test> to compile this.
 image_test: .image_test.o image_loader.o
-	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o image_test \
+	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o $@ \
 		2>&1 | tee ./Errors/$@.$(GCCERREXT)
 
 .image_test.o: image_loader_test.cpp image_loader.h typedefs.h
@@ -38,10 +38,19 @@ image_test: .image_test.o image_loader.o
 
 # The test program for the nodes, use <make node_test> to compile this.
 node_test: .node_test.o .node.o
-	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o node_test \
+	$(CXX) $^ $(CXXFLAGS) -o $@ \
 		2>&1 | tee ./Errors/$@.$(GCCERREXT)
 
 .node_test.o: node_test.cpp node.h typedefs.h
+	$(CXX) $(CXXFLAGS) \
+		-c $< -o $@ $(COPYOUTPUT)
+
+# The test program for the directory object, use <make dir_test> to compile.
+dir_test: .dir_test.o .directory.o
+	$(CXX) $^ $(CXXFLAGS) -o $@ \
+		2>&1 | tee ./Errors/$@.$(GCCERREXT)
+
+.dir_test.o: directory_test.cpp directory.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
@@ -62,6 +71,10 @@ node_test: .node_test.o .node.o
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
+.directory.o: directory.cpp directory.h
+	$(CXX) $(CXXFLAGS) \
+		-c $< -o $@ $(COPYOUTPUT)
+
 #  Add additional commands for files to be compiled here, just copy/paste the
 # previous lines and modify, makes things easy.  Just remember to add the name
 # of the *.o file to the line that compiles the executable.  Also, this
@@ -70,6 +83,10 @@ node_test: .node_test.o .node.o
 # clean when browsing your files with ls, for example.
 
 clean:
-	rm -f .*.o $(MAIN) image_test node_test ./Errors/* a.out
+	rm -f .*.o $(MAIN) \
+		dir_test \
+		image_test \
+		node_test \
+		./Errors/* a.out
 
-all: $(MAIN) node_test image_test
+all: $(MAIN) node_test image_test dir_test
