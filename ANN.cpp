@@ -111,6 +111,7 @@ bool ANN::save()
 
 LD ANN::run()
 {
+  return 0.0;
 }
 
 void ANN::back_propagate( LD )
