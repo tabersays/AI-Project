@@ -111,7 +111,7 @@ bool ANN::save()
 
 LD ANN::run()
 {
-  return 0.0;
+    return 1.0;
 }
 
 void ANN::back_propagate( LD )
@@ -129,7 +129,7 @@ bool ANN::load_image( string filename )
         input_ = new Image_Loader( filename );
     }
 
-    return !input_.is_loaded();
+    return !input_->is_loaded();
 }
 
 /**
