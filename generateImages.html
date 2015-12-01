@@ -6,7 +6,7 @@
 
 <body>
     <!--Canvas viewing area height, and width of bounding box-->
-    <canvas id="canvas" height="220px" width="252px"></canvas>
+    <canvas id="canvas" height="300px" width="252px"></canvas>
     <br/>
     <button onclick="downloadAll()">Download</button>
     <br>
@@ -25,7 +25,23 @@
                 pixels = '300px',
                 linkArr = [],
                 drawMiddle = canvas.width/2,
-                drawHeight = canvas.height - 2;
+                drawHeight = canvas.height - 80,
+                randomInt = function(min, max) {
+                    return Math.floor(Math.random() * (max - min)) + min;
+                },
+                randomColor = function() {
+                    var colors = ['red', 'blue', 'white', 'black', 'green', 'yellow'];
+                    return colors[randomInt(0, colors.length)];
+                },
+                randomLetter = function() {
+                    var letters = ['a', 'b', 'c', 'd', 'e'];
+                    return letters[randomInt(0, letters.length)];
+                },
+                randomLocation = function() {
+                    var height = canvas.height,
+                            width = canvas.width;
+                    
+                };
 
         canvasContext.textAlign = 'center';
 
@@ -47,10 +63,12 @@
                 document.body.appendChild(document.createElement('br'));
             });
         });
+
+
         //for viewing reference
         canvasContext.font = pixels + ' Arial';
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        canvasContext.fillText('D', drawMiddle, drawHeight);
+        canvasContext.fillText('g', drawMiddle, drawHeight);
 
         //click all the links there is a short timeout so the browser doesn't get overloaded
         function downloadAll() {

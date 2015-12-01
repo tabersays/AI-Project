@@ -9,15 +9,16 @@
 #define __NODE_H__
 
 #include<cassert>
+
 #include<iostream>
-#include<cmath>
-
-#include<vector>
-
-using std::vector;
-using std::exp;
 using std::ostream;
 using std::istream;
+
+#include<cmath>
+using std::exp;
+
+#include<vector>
+using std::vector;
 
 #include"typedefs.h"
 
@@ -29,15 +30,17 @@ class Node
 {
     public:
         Node( LD );
+        Node( istream& );
         ~Node( void );
 
         LD operator()( const vector<LD>& );
 
-        LD train( LD, LD, LD );
-        LD train( LD, LD, vector<LD>& );
+        LD train( LD, LD, LD, vector<LD>& );
+        LD train( LD, LD, vector<LD>&, vector<LD>& );
+
+        bool load( istream& );
 
         friend ostream& operator<<( ostream&, Node );
-        friend istream& operator>>( istream&, Node );
     private:
         LD w_; ///>The dummy weight associated with this node.
         vector<LD> weights_; /**> The weights of all the connection
@@ -45,8 +48,6 @@ class Node
                                         of the ANN. **/
 };
 
-/** For loading a node from file.*/
-istream& operator>>( istream&, Node );
 /** For outputing a node to the screen or to a file. */
 ostream& operator<<( ostream&, Node );
 

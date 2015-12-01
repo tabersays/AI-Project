@@ -12,7 +12,7 @@
 
 CXX = g++
 DEBUG = 0
-CXXFLAGS = -g -std=c++11 -Wall -W -pedantic -Werror #-D DEBUG
+CXXFLAGS = -g -time -std=c++11 -Wall -W -pedantic -Werror #-D DEBUG
 MAIN = recognize
 #  The following flags are used to duplicate compiler/linker errors and copy
 # the to a text file for easier reference.
@@ -20,9 +20,11 @@ GCCERREXT = gccerr
 SFML_LIB = -lsfml-graphics
 COPYOUTPUT = 2>&1 | tee ./Errors/$<.$(GCCERREXT)
 
+
 #		Additional *.o filenames go here.  V
-$(MAIN): .entry_point.o .node.o image_loader.o 
-	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o $(MAIN) \
+$(MAIN): .entry_point.o .node.o .image_loader.o .ANN.o
+	$(CXX) $^ \
+		$(CXXFLAGS) $(SFML_LIB) -o $(MAIN) \
 		2>&1 | tee ./Errors/$(MAIN).$(GCCERREXT)
 
 # The test program for the image loader, use <make image_test> to compile this.
@@ -30,7 +32,7 @@ image_test: .image_test.o image_loader.o
 	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o image_test \
 		2>&1 | tee ./Errors/$@.$(GCCERREXT)
 
-.image_test.o: image_loader_test.cpp image_loader.h
+.image_test.o: image_loader_test.cpp image_loader.h typedefs.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
@@ -39,12 +41,12 @@ node_test: .node_test.o .node.o
 	$(CXX) $^ $(CXXFLAGS) $(SFML_LIB) -o node_test \
 		2>&1 | tee ./Errors/$@.$(GCCERREXT)
 
-.node_test.o: node_test.cpp node.h
+.node_test.o: node_test.cpp node.h typedefs.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
 #The name of the *.h file for the main object goes here. V
-.entry_point.o: entry_point.cpp
+.entry_point.o: entry_point.cpp ANN.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
@@ -52,7 +54,11 @@ node_test: .node_test.o .node.o
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
-image_loader.o: image_loader.cpp image_loader.h
+.image_loader.o: image_loader.cpp image_loader.h typedefs.h
+	$(CXX) $(CXXFLAGS) \
+		-c $< -o $@ $(COPYOUTPUT)
+
+.ANN.o: ANN.cpp ANN.h image_loader.h node.h typedefs.h
 	$(CXX) $(CXXFLAGS) \
 		-c $< -o $@ $(COPYOUTPUT)
 
@@ -65,3 +71,5 @@ image_loader.o: image_loader.cpp image_loader.h
 
 clean:
 	rm -f .*.o $(MAIN) image_test node_test ./Errors/* a.out
+
+all: $(MAIN) node_test image_test

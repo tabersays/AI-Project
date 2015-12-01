@@ -12,6 +12,15 @@
 Node::Node( LD w ) : w_(w)
 {}
 
+Node::Node( istream& infile ) 
+{
+    if( load(infile) )
+        return;
+
+    //Load failed.
+    w_ = 1;
+}
+
 /**
  * Runs the functionality of the individual node.
  * @param data Data points/values from the previous layer.
@@ -40,13 +49,18 @@ LD Node::operator()( const vector<LD>& data )
  * the training data.
  * @param expected This is the value that was expected from the output layer.
  */
-LD Node::train( LD alpha, LD output, LD expected ) 
+LD Node::train( LD alpha, LD output, LD expected, vector<LD>& input ) 
 {
     LD delta =  output * ( 1 - output ) * (expected - output);
 
-    //  Dummy weight is always equal to 1 and is, therefore, implicit in this
+    //  Dummy input is always equal to 1 and is, therefore, implicit in this
     //calculation.
-    w_ = w_ + (alpha * delta);
+    w_ += alpha * delta;
+
+    for( unsigned i = 0; i < weights_.size(); i++ )
+    {       
+        weights_[i] += alpha * delta * input[i];
+    }
 
     return delta;
 }
@@ -59,25 +73,27 @@ LD Node::train( LD alpha, LD output, LD expected )
  * @param alpha The alpha value used to adjust weights.
  * @param output This is the value that was output for the pervious run from
  * the training data.
- * @param y A vector contain the values passed from training subsequent layers
+ * @param y A vector containing the deltas passed from training subsequent layers
  * of the ANN.
+ * @param inputs The vector of inputs that were previously passed in for
+ * recognition.
  */
-LD Node::train( LD alpha, LD output, vector<LD>& y )
+LD Node::train( LD alpha, LD output, vector<LD>& y, vector<LD>& inputs )
 {
     assert( y.size() == weights_.size() );
 
+    LD delta  = 0.0;//w_;
     LD factor = output * ( 1 - output );
-    LD delta;
-
     for( unsigned ii = 0; ii < y.size(); ii++ )
     {
         delta += y[ii] * weights_[ii];
     }
     delta *= factor;
 
+    w_ += alpha * delta;
     for( unsigned ii = 0; ii < weights_.size(); ii++ )
     {
-        weights_[ii] += ( alpha * output * delta );
+        weights_[ii] += ( alpha * inputs[ii] * delta );
     }
    
     return delta;
@@ -100,7 +116,7 @@ ostream& operator<<( ostream& out, Node node )
     for( unsigned ii = 0; ii < i; ii++ )
     {
         out << node.weights_[ii];
-        if( ii != i )
+        if( ii != (i - 1) )
             out << " ";
     }
     out << "@\n";
@@ -111,21 +127,23 @@ ostream& operator<<( ostream& out, Node node )
 /**
  * Reads in the saved weights corresponding to a single node.
  */
-istream& operator>>( istream& in, Node node )
+bool Node::load( istream& in )
 {
-    if( !in.good() ) //EOF? File did not open, etc...
-        return in;
+    weights_.clear();
 
-    in >> node.w_;
+    if( !in.good() ) //EOF? File did not open, etc...
+        return false;
+
+    in >> w_;
     LD n = 0;
 
     while( in.peek() != '@' )
     {
         in >> n;
-        node.weights_.push_back(n);
+        weights_.push_back(n);
     }
     in.ignore();
-    return in;
+    return true;
 }
 
 /** Destructor, empties the weights vector.
