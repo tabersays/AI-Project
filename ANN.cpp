@@ -27,9 +27,8 @@ bool ANN::load( char* file )
         return false;
     }
 
-    int entry_nodes = 0;
     unsigned layers = 0;
-    inf >> entry_nodes;
+    inf >> input_layer_size_;
     inf >> layers;
 
     while( !inf.eof() )
@@ -49,8 +48,8 @@ bool ANN::load( char* file )
                 inf.ignore();
         }
 
-
-        hidden_.push_back( layer );
+        if( layer.size() != 0 )
+            hidden_.push_back( layer );
         vector<LD> W;
         edges_.push_back(W);
 
@@ -59,13 +58,9 @@ bool ANN::load( char* file )
             inf >> dummy;
     }
 
-    unsigned o_layer = hidden_.size() - 1;
-    output_ = hidden_[o_layer];
-    for( unsigned i = 0; i < hidden_[o_layer].size(); i++ )
-        hidden_[o_layer][i] = NULL;
-    hidden_.pop_back();
+    cerr << layers << " " << hidden_.size() << endl;
 
-    return layers == hidden_.size();// + 1;
+    return layers == hidden_.size();
 }
 
 /** Used to save a trained ANN and backup during training.
@@ -76,9 +71,26 @@ bool ANN::save()
     ofstream of;
     of.open("test_output");
 
-    of << input_->size();
-    of << hidden_[0].size();//
+    char per = '%';
 
+    // Size of the input layer.
+    if( input_ )
+        of << input_->size(); 
+    else
+        of << input_layer_size_;
+    of << endl;
+
+    of << hidden_.size() << endl; // Number of layers.
+
+    for( auto i = hidden_.begin(); i != hidden_.end(); i++ )
+    {
+        for( auto j = i->begin(); j != i->end(); j++ )
+        {
+            of << **j;
+        }
+        of << per << endl;
+    }
+    /*
     for(std::vector<vector<Node*> >::iterator layer = hidden_.begin();
             layer != hidden_.end();
             layer++)
@@ -89,8 +101,9 @@ bool ANN::save()
         {
             of << *node;
         }
-        of << "%\n\n";
+        of << per << endl;
     }
+    */
     return true;
 }
 
@@ -113,9 +126,5 @@ ANN::~ANN( void )
         }
         hidden_[k].clear();
     }
-
-    for( unsigned m = 0; m < output_.size(); m++ )
-        if( output_[m] )
-            delete output_[m];
-    output_.clear();
+    hidden_.clear();
 }

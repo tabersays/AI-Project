@@ -39,14 +39,13 @@ class ANN
         bool save();
 
     private:
-        Image_Loader* input_;
-
         void clear();
 
-        vector<vector<Node*>> hidden_;
-        vector<Node*> output_;
-
-        vector<vector<LD>>   edges_;
+        Image_Loader*           input_; //input_layer
+        unsigned                input_layer_size_;
+        vector<vector<Node*>>   hidden_;        
+        LD                      output_;
+        vector<vector<LD>>      edges_;
 };
 
 #endif
