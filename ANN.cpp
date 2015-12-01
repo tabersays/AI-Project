@@ -17,8 +17,8 @@ bool ANN::load( char* file)
     {
         return false;
     }
-    int entry_nodes;
-    int layers ;
+    int entry_nodes = 0;
+    int layers = 0;
     inf.getline(file, entry_nodes);
     inf.getline(file, layers);
     while(!inf.eof() )
