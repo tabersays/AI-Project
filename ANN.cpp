@@ -12,8 +12,7 @@
 
 #include"ANN.h"
 
-ANN::ANN() : input_(NULL)
-{}
+ANN::ANN() : input_(NULL) {}
 
 /** Loads a saved ANN.
  * @param file The name (and optionally, path) to load.
@@ -32,40 +31,41 @@ bool ANN::load( char* file )
     unsigned layers = 0;
     inf >> entry_nodes;
     inf >> layers;
-    //Ignore leading whitespace (newline)
-    while( isspace( inf.peek() ) )
-        inf.ignore();
 
     while( !inf.eof() )
     {
-        cerr << "." << endl;
+        //Ignore leading whitespace (newline)
+        while( isspace( inf.peek() ) )
+            inf.ignore();
 
         vector<Node*> layer;
         while( !inf.eof() && inf.peek() != '%' )
         {
-//            cerr << inf.peek();
+            //            cerr << inf.peek();
             Node* n = new Node(inf);
             layer.push_back( n );
-            cerr << *n;
 
             while( isspace( inf.peek() ) )
                 inf.ignore();
         }
-//        cerr << endl;
+
 
         hidden_.push_back( layer );
         vector<LD> W;
         edges_.push_back(W);
 
         char dummy = 0;
-        while( dummy != '%' )
+        while( !inf.eof() && dummy != '%' )
             inf >> dummy;
     }
 
-    //    unsigned o_layer = hidden_.size() - 1;
+    unsigned o_layer = hidden_.size() - 1;
+    output_ = hidden_[o_layer];
+    for( unsigned i = 0; i < hidden_[o_layer].size(); i++ )
+        hidden_[o_layer][i] = NULL;
+    hidden_.pop_back();
 
-
-    return layers == hidden_.size() + 1;
+    return layers == hidden_.size();// + 1;
 }
 
 /** Used to save a trained ANN and backup during training.

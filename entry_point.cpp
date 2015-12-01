@@ -80,7 +80,6 @@ int main( int argc, char* argv[] )
         return 1;
     }
 
-
     // Cannot create variables within a switch statement.
     string dir;
     if( argc == 3 )
