@@ -30,7 +30,7 @@ node.write("%\n")
 count = hidden_nodes - reduction_step
 last_node_layer = 0
 puts "Node count =  #{count}."
-while count > 0
+while count > 1
     last_node_layer = count
     for i in 0..count - 1
         node_data = "1.0"
@@ -41,7 +41,7 @@ while count > 0
         node.write(node_data)
     end
     node.write("%\n")
-    count -= reduction_step
+    count = (count / reduction_step).ceil
     puts "Node count =  #{count}."
 end
 
