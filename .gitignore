@@ -35,6 +35,5 @@
 *.gccerr
 documentation/*
 recognize
-!image_loader.o
 image_test
 node_test
