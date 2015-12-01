@@ -13,14 +13,6 @@
  *
  * Converts an image into a vector<bool> to represent if a pixel is
  * filled in or left blank.
- *
- * @param image_name_ A string of the name and file path realative to the
- *  current directory of the image file.
- *
- * @return A vector of boolean values that represent a blank or filled in
- *  pixel.
- *   1 = filled
- *   0 = empty
  */
 bool Image_Loader::image_to_vector_bool( void )
 {
@@ -93,7 +85,7 @@ void Image_Loader::make_inputs( void )
                     mask = mask >> 1;
                 }
             }
-            trans_.push_back(val);
+            trans_.push_back(( val != 0) ? val : 1 );
         }
     }
 
