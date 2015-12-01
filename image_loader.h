@@ -43,6 +43,8 @@ class Image_Loader
         unsigned size( void )
         { return inputs_.size(); }
 
+        vector<LD>& inputs( void )
+        { return inputs_; }
         const LD& operator[]( unsigned a )
         { return inputs_[a]; }
         const LD& operator[]( int a )
