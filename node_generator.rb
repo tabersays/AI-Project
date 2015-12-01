@@ -17,7 +17,7 @@ node.write("#{in_nodes}\n#{hidden_nodes}\n")
 
 #first hidden layer conected to the input layer
 for i in 0..hidden_nodes - 1
-    node_data = "1.0"
+    node_data = "1"
     for j in 0..in_nodes - 1
         node_data = node_data + " " + rand(0.0...1.0).to_s
     end
@@ -33,7 +33,7 @@ puts "Node count =  #{count}."
 while count > 1
     last_node_layer = count
     for i in 0..count - 1
-        node_data = "1.0"
+        node_data = "1"
         for j in 0..count
              node_data = node_data + " " + rand(0.0...1.0).to_s
         end
@@ -46,7 +46,7 @@ while count > 1
 end
 
 if last_node_layer != 1
-    node_data = "1.0"
+    node_data = "1"
     for i in 0..last_node_layer - 1
         node_data = node_data + " " + rand(0.0...1.0).to_s
     end
