@@ -15,10 +15,16 @@ using std::round;
 #include<vector>
 using std::vector;
 
+#include<fstream>
+using std::ifstream;
+using std::ofstream;
+
 #include<iostream>
 using std::cin;
 using std::cout;
 using std::cerr;
+
+#include<ctime>
 //using 
 
 class ANN
@@ -26,12 +32,17 @@ class ANN
     public:
         ANN(char*);
 
+        bool load(char *);
+        bool save();
+
     private:
         Image_Loader* input_;
 
+        void clear();
+
         //  A dynamically allocated array of vector<Node*>s might be
 
-        vector<vector<Node*>> hidden_;
+        vector<vector<Node*> > hidden_;
         vector<Node*> output_;
 };
 
