@@ -1,4 +1,9 @@
-
+/**
+ *   A testing routine for the directory object... yes... I re-wrote ls.
+ *
+ *   @file directory_test.cpp
+ *   @author Thomas Russel Carrel
+ */
 
 #include"directory.h"
 
@@ -14,7 +19,7 @@ int main( int argc, char* argv[] )
     else
         name = "./";
 
-    Directory dir(name.c_str());
+    Directory dir( name );
 
     for( unsigned i = 0; i < dir.file().size(); i++ )
         cout << dir.file()[i] << endl;

@@ -1,8 +1,15 @@
-
-
+/**
+ *    Definitions for the directory object.
+ *
+ * @file directory.cpp
+ * @author Thomas Russel Carrel
+ */
 
 #include"directory.h"
 
+/**  Ctor for the directory.
+ * @param name The name of the directory to load.
+ */
 Directory::Directory( string name = "./" )
 {
     DIR* directory = opendir(name.c_str());
