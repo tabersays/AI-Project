@@ -33,7 +33,7 @@ class Node
         Node( istream& );
         ~Node( void );
 
-        LD operator()( const vector<LD>& );
+        LD activate( const vector<LD>& );
 
         LD train( LD, LD, LD, vector<LD>& );
         LD train( LD, LD, vector<LD>&, vector<LD>& );

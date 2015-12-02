@@ -2,6 +2,7 @@
  * Node class definitions.
  *
  * @author Thomas R. Carrel
+ * @author Mark Moniz
  * @file node.cpp
  */
 #include"node.h"
@@ -25,7 +26,7 @@ Node::Node( istream& infile )
  * Runs the functionality of the individual node.
  * @param data Data points/values from the previous layer.
  */
-LD Node::operator()( const vector<LD>& data )
+LD Node::activate( const vector<LD>& data )
 {
     assert( data.size() == weights_.size() );
 
