@@ -111,7 +111,15 @@ bool ANN::save()
 
 LD ANN::run()
 {
-    return 1.0;
+    auto inputs( input_->inputs() );
+    for (unsigned l = 1; l < hidden_.size(); l++)
+    {
+        for(unsigned j =0; j < hidden_[l].size(); j++) {
+            inputs[j] = hidden_[l][j]->activate( inputs );
+        }
+        edges_[l] = inputs ;
+    }
+    return edges_.back().back();
 }
 
 void ANN::back_propagate( LD output )
