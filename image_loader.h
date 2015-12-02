@@ -28,6 +28,8 @@ using std::setw;
 using std::setbase;
 using std::setfill;
 
+#include<cassert>
+
 #include"typedefs.h"
 using namespace std;
 

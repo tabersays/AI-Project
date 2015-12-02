@@ -106,16 +106,17 @@ int train_net( ANN& network, string name )
         begin = high_resolution_clock::now();
 
         network.load_image( dir.file()[i] );
-        network.back_propagate( network.run() );
+        LD value = network.run();
+        assert( !isnan(value) );
+        network.back_propagate( value );
         end = high_resolution_clock::now();
 
         dur = duration_cast<duration<double>>(end - begin);
-        cout << "  Training itteration took " << dur.count() << " seconds.";
-
+        cout << "  Training itteration took " << dur.count() << " seconds." << endl;
 
         network.save();
 
-        number << i;
+        number << i << flush;
         number.close();
     }
     return 0;

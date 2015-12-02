@@ -12,7 +12,7 @@
 
 CXX = g++
 DEBUG = 0
-CXXFLAGS = -g -time -std=c++11 -Wall -W -pedantic -Werror #-D DEBUG
+CXXFLAGS = -g -time -std=c++11 -Wall -W -pedantic -Werror #-D ALPHA 0.01
 MAIN = recognize
 #  The following flags are used to duplicate compiler/linker errors and copy
 # the to a text file for easier reference.

@@ -9,7 +9,7 @@
  */
 
 
-#define ALPHA 0.05
+
 #include"ANN.h"
 
 ANN::ANN() : input_(NULL) {}
@@ -49,7 +49,7 @@ bool ANN::load( char* file )
 
         if( layer.size() != 0 )
             hidden_.push_back( layer );
-        
+
         //  Doing this here will trigger eof() before the next loop iteration,
         //if necessary.
         char dummy = 0;
@@ -96,42 +96,37 @@ bool ANN::save()
         }
         of << per << endl;
     }
-    /*
-       for(std::vector<vector<Node*> >::iterator layer = hidden_.begin();
-       layer != hidden_.end();
-       layer++)
-       {
-       for(std::vector<Node*>::iterator node = layer->begin();
-       node != layer->end();
-       node++)
-       {
-       of << *node;
-       }
-       of << per << endl;
-       }
-       */
     return true;
 }
 
 LD ANN::run()
 {
-    auto inputs( input_->inputs() );
+    //auto inputs( input_->inputs() );
 
     //    cerr << "size " << inputs.size();
     unsigned last = 0;
 
     for (unsigned l = 0; l < hidden_.size(); l++)
     {
+        edges_[l].clear();
         //        cerr << "l " << l << endl;
-        for(unsigned j =0; j < hidden_[l].size(); j++) {
+        for(unsigned j =0; j < hidden_[l].size(); j++)
+        {
             //            cerr << "hl size << " << hidden_[l].size() << " edges " << edges_[l].size() << " ";
 
+            cerr << l;
             if( l != 0 )
-                edges_[l].push_back(hidden_[l][j]->activate( edges_[l-1] ) );
+            {
+                LD value = hidden_[l][j]->activate( edges_[l-1] );
+                assert( !isnan(value) );
+                edges_[l].push_back( value );
+            }
             else
-                edges_[l].push_back(hidden_[l][j]->activate( inputs ));
-
-            //    cerr << "e " << edges_[l].size() << endl;
+            {
+                LD value = hidden_[l][j]->activate( input_->inputs() );
+                assert( !isnan(value) );
+                edges_[l].push_back( value );
+            }
         }
         last = l;
     }
@@ -151,38 +146,88 @@ void ANN::back_propagate( LD output )
         delta_c->push_back(
                 (*layer)[i]->train( ALPHA
                     , output
-                    , input_->expected()
-                    , *datum));
+                    , input_->expected() ) );
     }
+    datum++;
+    layer++;
+    vector<LD> weights;
 
-    datum++, layer++;
+    stack<vector<LD>*> deltas;
+    deltas.push(delta_c);
 
-    for(; layer != hidden_.rend(); layer++, datum++)
+
+    //                cerr << "HI GRANDMA!!!" << endl;
+    auto begin = hidden_.rend();// - 1;
+    for(; layer != begin + 1; datum++, layer++)
     {
+
+        cerr << "!" << flush;
+
         if( delta_p != NULL)
             delete delta_p;
         delta_p = delta_c;
         delta_c = new vector<LD>;
-        for(unsigned i = 0; i < layer->size(); i++)
-        {
-            if(datum != edges_.rend() - 1)
+        deltas.push( delta_c );
+        unsigned stop = (layer != begin) ? layer->size() : input_->inputs().size();
+        for(unsigned i = 0; i < stop; i++ ) 
+        {                       
+            cerr << "&";
+            cerr << " size  " << stop << endl;
+            cerr << " layer " << i << endl;
+
+            weights.clear();
+            for( unsigned q = 0; q < (*(layer-1)).size(); q++ )
             {
-                delta_c->push_back(
-                        (*layer)[i]->train( ALPHA
-                            , (*datum)[i]
-                            , (*delta_p)
-                            , *(datum - 1)));
+                weights.push_back( (*(layer-1))[q]->get_weight(q) );
+            }
+            //         layer++;
+            for( unsigned q = 0; q < delta_p->size(); q++ )
+            {
+                cerr << "q" << (*delta_p)[q] << endl;
+            }
+
+            if( layer != begin ) 
+            {
+                deltas.top()->push_back(
+                        (*layer)[i]->train(
+                            (*datum)[i]
+                            , *delta_p
+                            , weights ));
             }
             else
             {
-                delta_c->push_back(
-                        (*layer)[i]->train( ALPHA
-                            , (*datum)[i]
-                            , (*delta_p)
-                            , input_->inputs()));
+                cerr << "OH SHIT" << endl;
+
+                LD output = input_->inputs()[i];
+                LD delta  = 0.0;
+                LD factor = output * ( 1 - output );
+                for( unsigned ii = 0; ii < delta_p->size(); ii++ )
+                {
+                    delta += (*delta_p)[ii] * weights[ii];
+                }
+                delta *= factor;
+                deltas.top()->push_back(delta);
             }
         }
     }
+
+    for( unsigned i = 0; i < hidden_.size(); i++ )
+    {
+        cerr << "|";
+        for( unsigned j = 0; j < hidden_[i].size(); j++ )
+        {
+            cerr << "+";
+
+            hidden_[i][j]->update_weights( ALPHA, edges_[j], (*deltas.top())[j] );
+        }
+        cerr << endl;
+        deltas.pop();
+    }
+
+    if( delta_p )
+        delete delta_p;
+    if( delta_c )
+        delete delta_c;
 }
 
 bool ANN::load_image( string filename )

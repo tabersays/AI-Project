@@ -4,6 +4,8 @@
 #ifndef __ANN_H__
 #define __ANN_H__
 
+#define ALPHA 0.01
+
 #include"node.h"
 #include"image_loader.h"
 
@@ -14,6 +16,9 @@ using std::round;
 
 #include<vector>
 using std::vector;
+
+#include<stack>
+using std::stack;
 
 #include<fstream>
 using std::ifstream;

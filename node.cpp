@@ -30,8 +30,8 @@ Node::Node( istream& infile )
  */
 LD Node::activate( const vector<LD>& data )
 {
-    cerr << "dat " << data.size() << "\twght " << weights_.size() << endl;
-    cerr << "w0 " << w_ << "\tw1 " << weights_[0] << endl;
+//    cerr << "dat " << data.size() << "\twght " << weights_.size() << endl;
+//    cerr << "w0 " << w_ << "\tw1 " << weights_[0] << endl;
 
     assert( data.size() == weights_.size() );
 
@@ -40,10 +40,20 @@ LD Node::activate( const vector<LD>& data )
 
     for( int ii = 0; ii < size; ii++ )
     {
+//        cerr << ".";
+        assert( data[ii] != 0 );
+        assert( !isnan(weights_[ii]) );
         output += data[ii] * weights_[ii];
     }
 
-    return 1 / ( 1 + exp(-output) );
+    LD final_output = (LD)1.0;
+    LD denom = ( (LD)1.0 + (LD)exp(-output) );
+//    cerr << output;
+    assert( denom != 0 );
+//    assert( !isnan(denom) );
+//    assert( !isnan( final_output / denom ) );
+
+    return final_output / denom;
 }
 
 /**
@@ -57,20 +67,22 @@ LD Node::activate( const vector<LD>& data )
  * @param input The inputs that were given with the recognition of the previous
  * training input.
  */
-LD Node::train( LD alpha, LD output, LD expected, vector<LD>& input ) 
+LD Node::train( LD /*alpha*/, LD output, LD expected ) 
 {
-    LD delta =  output * ( 1 - output ) * (expected - output);
+    return output * ( 1 - output ) * (expected - output);
 
     //  Dummy input is always equal to 1 and is, therefore, implicit in this
     //calculation.
-    w_ += alpha * delta;
+    /*
+       w_ += alpha * delta;
 
-    for( unsigned i = 0; i < weights_.size(); i++ )
-    {       
-        weights_[i] += alpha * delta * input[i];
-    }
+       for( unsigned i = 0; i < weights_.size(); i++ )
+       {       
+       weights_[i] += alpha * delta * input[i];
+       }
 
-    return delta;
+       return delta;
+       */
 }
 
 
@@ -86,25 +98,36 @@ LD Node::train( LD alpha, LD output, LD expected, vector<LD>& input )
  * @param inputs The vector of inputs that were previously passed in for
  * recognition.
  */
-LD Node::train( LD alpha, LD output, vector<LD>& y, vector<LD>& inputs )
+LD Node::train( LD output, vector<LD>& y, vector<LD>& weights )
 {
-    assert( y.size() == weights_.size() );
+    cerr << "y " << y.size() << " weights " << weights.size() << endl;
+    assert( y.size() == weights.size() );
+    assert( !isnan(output) );
 
     LD delta  = 0.0;//w_;
     LD factor = output * ( 1 - output );
     for( unsigned ii = 0; ii < y.size(); ii++ )
     {
-        delta += y[ii] * weights_[ii];
+        delta += y[ii] * weights[ii];
     }
     delta *= factor;
 
+    assert( !isnan(delta) );
+
+    return delta;
+}
+
+
+void Node::update_weights( LD alpha, vector<LD>& inputs, LD delta )
+{
     w_ += alpha * delta;
     for( unsigned ii = 0; ii < weights_.size(); ii++ )
     {
-        weights_[ii] += ( alpha * inputs[ii] * delta );
+ //       assert( !isnan( inputs[ii] ) ); //update_weights
+        LD x = (isnan(inputs[ii]) ? 0.000101010 : inputs[ii]);
+        weights_[ii] += ( alpha * x * delta );
+        //        assert( !isnan( weights_[ii] ) ); //update_weights
     }
-   
-    return delta;
 }
 
 /**
@@ -155,7 +178,7 @@ bool Node::load( istream& in )
 }
 
 /** Destructor, empties the weights vector.
- */
+*/
 Node::~Node(void)
 {
     weights_.clear();

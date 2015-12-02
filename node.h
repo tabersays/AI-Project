@@ -35,8 +35,14 @@ class Node
 
         LD activate( const vector<LD>& );
 
-        LD train( LD, LD, LD, vector<LD>& );
-        LD train( LD, LD, vector<LD>&, vector<LD>& );
+        LD train( LD, LD, LD );
+        LD train( LD, vector<LD>&, vector<LD>& );
+
+        LD get_weight( unsigned i )
+        { return weights_[i]; }
+
+        void update_weights( LD, vector<LD>&, LD );
+       
 
         bool load( istream& );
 
