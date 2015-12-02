@@ -45,7 +45,7 @@ int run_net( ANN& network )
             << "Enter mage file name (and path):" << endl 
             << "\t$ " << flush;
         cin >> image_file;
-        bool loaded = network.load_image( image_file );
+        bool loaded = !network.load_image( image_file );
 
         while( !loaded )
         {

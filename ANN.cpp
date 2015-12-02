@@ -112,19 +112,24 @@ LD ANN::run()
 {
     auto inputs( input_->inputs() );
 
-    cerr << "size " << inputs.size();
+//    cerr << "size " << inputs.size();
+    unsigned last = 0;
 
     for (unsigned l = 0; l < hidden_.size(); l++)
     {
-        cerr << "l " << l << endl;
+//        cerr << "l " << l << endl;
         for(unsigned j =0; j < hidden_[l].size(); j++) {
+//            cerr << "hl size << " << hidden_[l].size() << " edges " << edges_[l].size() << " ";
+
             if( l != 0 )
                 edges_[l].push_back(hidden_[l][j]->activate( edges_[l-1] ) );
             else
                 edges_[l].push_back(hidden_[l][j]->activate( inputs ));
         }
+        last = l;
     }
-    return edges_.back().back();
+
+    return edges_[last][ edges_[last].size() - 1];
 }
 
 void ANN::back_propagate( LD output )
