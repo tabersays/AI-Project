@@ -4,12 +4,12 @@
  *   @file ANN.cpp
  *
  *   @author Michael Taylor
- *   @author Mark Moniz
+ *   @author Matt ?
  *   @author Thomas Russel Carrel
  */
 
 
-
+#define ALPHA 0.05
 #include"ANN.h"
 
 ANN::ANN() : input_(NULL) {}
@@ -77,7 +77,7 @@ bool ANN::save()
 
     // Size of the input layer.
     if( input_ )
-        of << input_->size(); 
+        of << input_->size();
     else
         of << input_layer_size_;
     of << endl;
@@ -114,8 +114,50 @@ LD ANN::run()
     return 1.0;
 }
 
-void ANN::back_propagate( LD )
+void ANN::back_propagate( LD output )
 {
+  auto layer = hidden_.rbegin();
+  auto datum = edges_.rbegin();
+
+  vector<LD> *delta_p = NULL;
+  vector<LD> *delta_c = new vector<LD>;
+  for(auto i = layer->begin(); i != layer->end(); i++)
+  {
+    delta_c->push_back(
+        (*i)->train( ALPHA
+          , output
+          , input_->expected()
+          , *datum));
+  }
+
+  datum++, layer++;
+
+  for(; layer != hidden_.rend(); layer++, datum++)
+  {
+    if( delta_p != NULL)
+      delete delta_p;
+    delta_p = delta_c;
+    delta_c = new vector<LD>;
+    for(unsigned i = 0; i < layer->size(); i++)
+    {
+      if(datum == edges_.rend() - 1)
+      {
+        delta_c->push_back(
+            (*layer)[i]->train( ALPHA
+              , (*datum)[i]
+              , (*delta_p)
+              , *(datum + 1)));
+      }
+      else
+      {
+        delta_c->push_back(
+          (*layer)[i]->train( ALPHA
+            , (*datum)[i]
+            , (*delta_p)
+            , input_->inputs()));
+      }
+    }
+  }
 }
 
 bool ANN::load_image( string filename )
