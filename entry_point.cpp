@@ -66,6 +66,9 @@ int run_net( ANN& network )
 int train_net( ANN& network, string name )
 {
     Directory dir(name);
+
+    ofstream number;
+
     cout << "File index to start at, should be 0 unless crash?" << endl;
     unsigned file_index = 0;
     cin >> file_index;
@@ -89,9 +92,14 @@ int train_net( ANN& network, string name )
 
     for(unsigned i = file_index; i < last_step; ++i)
     {
+        number.open("last_file_number");
+
         network.load_image( dir.file()[i] );
         network.back_propagate( network.run() );
         network.save();
+
+        number << i;
+        number.close();
     }
     return 0;
 }
