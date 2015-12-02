@@ -14,7 +14,12 @@ reduction_step = gets.to_i
 
 
 node = File.new(file_name, "w")
-node.write("#{in_nodes}\n#{hidden_nodes}\n")
+levels = in_nodes ** (1.0/reduction_step)
+if( levels.ceil != levels )
+  levels += 1
+  levels = levels.ceil
+end
+node.write("#{in_nodes}\n#{levels.round}\n")
 
 #first hidden layer conected to the input layer
 for i in 0..hidden_nodes - 1
