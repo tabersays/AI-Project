@@ -27,7 +27,7 @@ end
 node.write("%\n")
 
 #all other hidden layers
-count = hidden_nodes - reduction_step
+count = hidden_nodes
 last_node_layer = 0
 puts "Node count =  #{count}."
 while count > 1
