@@ -55,7 +55,7 @@ void Image_Loader::new_image( string filename )
 {
     image_name_ = filename;
     if( !image_to_vector_bool() )
-        throw -1;
+        return;
 
     rows_ = ceil( y_ / 4.0 );
     cols_ = ceil( x_ / 4.0 );

@@ -37,7 +37,7 @@ int run_net( ANN& network )
     string image_file;
     char loop = 0;
 
-    while( loop != 'y' && loop != 'Y' )
+    while( loop == 'y' || loop == 'Y' )
     {
         cout
             << "\033[2J"; //Clear the screen.
