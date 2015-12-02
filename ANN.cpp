@@ -40,7 +40,6 @@ bool ANN::load( char* file )
         vector<Node*> layer;
         while( !inf.eof() && inf.peek() != '%' )
         {
-            //            cerr << inf.peek();
             Node* n = new Node(inf);
             layer.push_back( n );
 
@@ -112,60 +111,66 @@ bool ANN::save()
 LD ANN::run()
 {
     auto inputs( input_->inputs() );
-    for (unsigned l = 1; l < hidden_.size(); l++)
+
+    cerr << "size " << inputs.size();
+
+    for (unsigned l = 0; l < hidden_.size(); l++)
     {
+        cerr << "l " << l << endl;
         for(unsigned j =0; j < hidden_[l].size(); j++) {
-            inputs[j] = hidden_[l][j]->activate( inputs );
+            if( l != 0 )
+                edges_[l].push_back(hidden_[l][j]->activate( edges_[l-1] ) );
+            else
+                edges_[l].push_back(hidden_[l][j]->activate( inputs ));
         }
-        edges_[l] = inputs ;
     }
     return edges_.back().back();
 }
 
 void ANN::back_propagate( LD output )
 {
-  auto layer = hidden_.rbegin();
-  auto datum = edges_.rbegin();
+    auto layer = hidden_.rbegin();
+    auto datum = edges_.rbegin();
 
-  vector<LD> *delta_p = NULL;
-  vector<LD> *delta_c = new vector<LD>;
-  for(auto i = layer->begin(); i != layer->end(); i++)
-  {
-    delta_c->push_back(
-        (*i)->train( ALPHA
-          , output
-          , input_->expected()
-          , *datum));
-  }
-
-  datum++, layer++;
-
-  for(; layer != hidden_.rend(); layer++, datum++)
-  {
-    if( delta_p != NULL)
-      delete delta_p;
-    delta_p = delta_c;
-    delta_c = new vector<LD>;
-    for(unsigned i = 0; i < layer->size(); i++)
+    vector<LD> *delta_p = NULL;
+    vector<LD> *delta_c = new vector<LD>;
+    for(auto i = layer->begin(); i != layer->end(); i++)
     {
-      if(datum == edges_.rend() - 1)
-      {
         delta_c->push_back(
-            (*layer)[i]->train( ALPHA
-              , (*datum)[i]
-              , (*delta_p)
-              , *(datum + 1)));
-      }
-      else
-      {
-        delta_c->push_back(
-          (*layer)[i]->train( ALPHA
-            , (*datum)[i]
-            , (*delta_p)
-            , input_->inputs()));
-      }
+                (*i)->train( ALPHA
+                    , output
+                    , input_->expected()
+                    , *datum));
     }
-  }
+
+    datum++, layer++;
+
+    for(; layer != hidden_.rend(); layer++, datum++)
+    {
+        if( delta_p != NULL)
+            delete delta_p;
+        delta_p = delta_c;
+        delta_c = new vector<LD>;
+        for(unsigned i = 0; i < layer->size(); i++)
+        {
+            if(datum == edges_.rend() - 1)
+            {
+                delta_c->push_back(
+                        (*layer)[i]->train( ALPHA
+                            , (*datum)[i]
+                            , (*delta_p)
+                            , *(datum + 1)));
+            }
+            else
+            {
+                delta_c->push_back(
+                        (*layer)[i]->train( ALPHA
+                            , (*datum)[i]
+                            , (*delta_p)
+                            , input_->inputs()));
+            }
+        }
+    }
 }
 
 bool ANN::load_image( string filename )

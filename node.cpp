@@ -7,6 +7,8 @@
  */
 #include"node.h"
 
+using namespace std;
+
 /** Node ctor.
  * @param w The dummy weight associated with this node.
  */
@@ -28,6 +30,9 @@ Node::Node( istream& infile )
  */
 LD Node::activate( const vector<LD>& data )
 {
+    cerr << "dat " << data.size() << "\twght " << weights_.size() << endl;
+    cerr << "w0 " << w_ << "\tw1 " << weights_[0] << endl;
+
     assert( data.size() == weights_.size() );
 
     LD output = w_;
