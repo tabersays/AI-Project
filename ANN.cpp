@@ -53,6 +53,8 @@ bool ANN::load( char* file )
         vector<LD> W;
         edges_.push_back(W);
 
+        //  Doing this here will trigger eof() before the next loop iteration,
+        //if necessary.
         char dummy = 0;
         while( !inf.eof() && dummy != '%' )
             inf >> dummy;
@@ -105,6 +107,28 @@ bool ANN::save()
     }
     */
     return true;
+}
+
+LD ANN::run()
+{
+}
+
+void ANN::back_propagate( LD )
+{
+}
+
+bool ANN::load_image( string filename )
+{
+    if( input_ )
+    {
+        input_->new_image( filename );
+    }
+    else
+    {
+        input_ = new Image_Loader( filename );
+    }
+
+    return !input_.is_loaded();
 }
 
 /**
