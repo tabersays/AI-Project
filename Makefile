@@ -83,7 +83,7 @@ dir_test: .dir_test.o .directory.o
 # clean when browsing your files with ls, for example.
 
 clean:
-	rm -f .*.o $(MAIN) \
+	rm -f *.o .*.o $(MAIN) \
 		dir_test \
 		image_test \
 		node_test \
