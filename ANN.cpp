@@ -49,9 +49,7 @@ bool ANN::load( char* file )
 
         if( layer.size() != 0 )
             hidden_.push_back( layer );
-        vector<LD> W;
-        edges_.push_back(W);
-
+        
         //  Doing this here will trigger eof() before the next loop iteration,
         //if necessary.
         char dummy = 0;
@@ -59,7 +57,14 @@ bool ANN::load( char* file )
             inf >> dummy;
     }
 
+    for( unsigned i = 0; i < hidden_.size(); i++ )
+    {
+        vector<LD> W;
+        edges_.push_back(W);
+    }
+
     cerr << layers << " " << hidden_.size() << endl;
+    cerr << "edges " << edges_.size() << endl;
 
     return layers == hidden_.size();
 }
@@ -92,19 +97,19 @@ bool ANN::save()
         of << per << endl;
     }
     /*
-    for(std::vector<vector<Node*> >::iterator layer = hidden_.begin();
-            layer != hidden_.end();
-            layer++)
-    {
-        for(std::vector<Node*>::iterator node = layer->begin();
-                node != layer->end();
-                node++)
-        {
-            of << *node;
-        }
-        of << per << endl;
-    }
-    */
+       for(std::vector<vector<Node*> >::iterator layer = hidden_.begin();
+       layer != hidden_.end();
+       layer++)
+       {
+       for(std::vector<Node*>::iterator node = layer->begin();
+       node != layer->end();
+       node++)
+       {
+       of << *node;
+       }
+       of << per << endl;
+       }
+       */
     return true;
 }
 
@@ -112,19 +117,21 @@ LD ANN::run()
 {
     auto inputs( input_->inputs() );
 
-//    cerr << "size " << inputs.size();
+    //    cerr << "size " << inputs.size();
     unsigned last = 0;
 
     for (unsigned l = 0; l < hidden_.size(); l++)
     {
-//        cerr << "l " << l << endl;
+        //        cerr << "l " << l << endl;
         for(unsigned j =0; j < hidden_[l].size(); j++) {
-//            cerr << "hl size << " << hidden_[l].size() << " edges " << edges_[l].size() << " ";
+            //            cerr << "hl size << " << hidden_[l].size() << " edges " << edges_[l].size() << " ";
 
             if( l != 0 )
                 edges_[l].push_back(hidden_[l][j]->activate( edges_[l-1] ) );
             else
                 edges_[l].push_back(hidden_[l][j]->activate( inputs ));
+
+            //    cerr << "e " << edges_[l].size() << endl;
         }
         last = l;
     }
@@ -139,10 +146,10 @@ void ANN::back_propagate( LD output )
 
     vector<LD> *delta_p = NULL;
     vector<LD> *delta_c = new vector<LD>;
-    for(auto i = layer->begin(); i != layer->end(); i++)
+    for(unsigned i = 0; i < layer->size(); i++)
     {
         delta_c->push_back(
-                (*i)->train( ALPHA
+                (*layer)[i]->train( ALPHA
                     , output
                     , input_->expected()
                     , *datum));
@@ -158,13 +165,13 @@ void ANN::back_propagate( LD output )
         delta_c = new vector<LD>;
         for(unsigned i = 0; i < layer->size(); i++)
         {
-            if(datum == edges_.rend() - 1)
+            if(datum != edges_.rend() - 1)
             {
                 delta_c->push_back(
                         (*layer)[i]->train( ALPHA
                             , (*datum)[i]
                             , (*delta_p)
-                            , *(datum + 1)));
+                            , *(datum - 1)));
             }
             else
             {
