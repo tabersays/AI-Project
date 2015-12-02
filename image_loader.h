@@ -37,7 +37,7 @@ class Image_Loader
         Image_Loader( string );
         ~Image_Loader( void );
 
-        void operator()( string );
+        void new_image( string );
         LD expected( void );
 
         void print_debug( void );

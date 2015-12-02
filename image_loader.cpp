@@ -51,7 +51,7 @@ bool Image_Loader::image_to_vector_bool( void )
 
 /**Loads a new image into the object.
 */
-void Image_Loader::operator()( string filename )
+void Image_Loader::new_image( string filename )
 {
   image_name_ = filename;
   if( !image_to_vector_bool() )
@@ -101,7 +101,7 @@ void Image_Loader::make_inputs( void )
  */
 Image_Loader::Image_Loader( string i ) : image_name_(i)
 {
-  this->operator()(i);
+  new_image(i);
 }
 
 /** For training purposes, gets the expected output of the neural net.
