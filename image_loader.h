@@ -5,6 +5,8 @@
 using sf::Image;
 using sf::Vector2u;
 using sf::Color;
+using sf::Sprite;
+using sf::Texture;
 
 #include<string>
 using std::string;
@@ -27,7 +29,7 @@ using std::setbase;
 using std::setfill;
 
 #include"typedefs.h"
-
+using namespace std;
 
 class Image_Loader
 {
@@ -35,7 +37,7 @@ class Image_Loader
         Image_Loader( string );
         ~Image_Loader( void );
 
-        void operator()( string );
+        void new_image( string );
         LD expected( void );
 
         void print_debug( void );
@@ -50,13 +52,18 @@ class Image_Loader
         const LD& operator[]( int a )
         { return inputs_[a]; }
 
+        bool is_loaded( void )
+        { return image_load_state_; }
+
 
     private:
         Image_Loader() {} //Force use of the other ctor.
-
+        void change_state( bool state )
+        { image_load_state_ = state; }
         bool image_to_vector_bool( void );
         void make_inputs( void );
 
+        bool                        image_load_state_;
         vector<LD>                  inputs_;
         vector<short>               trans_;
         vector<bool>                pixels_;
@@ -68,5 +75,4 @@ class Image_Loader
         unsigned                    cols_;
 
 };
-
 #endif
