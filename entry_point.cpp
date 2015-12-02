@@ -24,6 +24,11 @@ using std::flush;
 #include<cmath>
 using std::round;
 
+#include<chrono>
+using std::chrono::high_resolution_clock;
+using std::chrono::duration;
+using std::chrono::duration_cast;
+
 #include"ANN.h"
 #include"directory.h"
 
@@ -66,8 +71,12 @@ int run_net( ANN& network )
 int train_net( ANN& network, string name )
 {
     Directory dir(name);
-
     ofstream number;
+
+    //timing
+    high_resolution_clock::time_point begin;
+    high_resolution_clock::time_point end;
+    duration<double> dur;
 
     cout << "File index to start at, should be 0 unless crash?" << endl;
     unsigned file_index = 0;
@@ -94,8 +103,16 @@ int train_net( ANN& network, string name )
     {
         number.open("last_file_number");
 
+        begin = high_resolution_clock::now();
+
         network.load_image( dir.file()[i] );
         network.back_propagate( network.run() );
+        end = high_resolution_clock::now();
+
+        dur = duration_cast<duration<double>>(end - begin);
+        cout << "  Training itteration took " << dur.count() << " seconds.";
+
+
         network.save();
 
         number << i;
