@@ -63,8 +63,8 @@ bool ANN::load( char* file )
         edges_.push_back(W);
     }
 
-    cerr << layers << " " << hidden_.size() << endl;
-    cerr << "edges " << edges_.size() << endl;
+    //cerr << layers << " " << hidden_.size() << endl;
+    //cerr << "edges " << edges_.size() << endl;
 
     return layers == hidden_.size();
 }
@@ -72,10 +72,10 @@ bool ANN::load( char* file )
 /** Used to save a trained ANN and backup during training.
  * The file name is predetermined.
  */
-bool ANN::save()
+bool ANN::save(string fname)
 {
     ofstream of;
-    of.open("test_output");
+    of.open( fname.c_str() );
 
     char per = '%';
 
@@ -114,7 +114,7 @@ LD ANN::run()
         {
             //            cerr << "hl size << " << hidden_[l].size() << " edges " << edges_[l].size() << " ";
 
-            cerr << l;
+            //cerr << l;
             if( l != 0 )
             {
                 LD value = hidden_[l][j]->activate( edges_[l-1] );
@@ -161,7 +161,7 @@ void ANN::back_propagate( LD output )
     for(; layer != begin + 1; datum++, layer++)
     {
 
-        cerr << "!" << flush;
+        //cerr << "!" << flush;
 
         if( delta_p != NULL)
             delete delta_p;
@@ -171,9 +171,9 @@ void ANN::back_propagate( LD output )
         unsigned stop = (layer != begin) ? layer->size() : input_->inputs().size();
         for(unsigned i = 0; i < stop; i++ ) 
         {                       
-            cerr << "&";
-            cerr << " size  " << stop << endl;
-            cerr << " layer " << i << endl;
+            //cerr << "&";
+            //cerr << " size  " << stop << endl;
+            //cerr << " layer " << i << endl;
 
             weights.clear();
             for( unsigned q = 0; q < (*(layer-1)).size(); q++ )
@@ -183,7 +183,7 @@ void ANN::back_propagate( LD output )
             //         layer++;
             for( unsigned q = 0; q < delta_p->size(); q++ )
             {
-                cerr << "q" << (*delta_p)[q] << endl;
+                //cerr << "q" << (*delta_p)[q] << endl;
             }
 
             if( layer != begin ) 
@@ -196,7 +196,7 @@ void ANN::back_propagate( LD output )
             }
             else
             {
-                cerr << "OH SHIT" << endl;
+                //cerr << "OH SHIT" << endl;
 
                 LD output = input_->inputs()[i];
                 LD delta  = 0.0;
@@ -213,14 +213,14 @@ void ANN::back_propagate( LD output )
 
     for( unsigned i = 0; i < hidden_.size(); i++ )
     {
-        cerr << "|";
+        //cerr << "|";
         for( unsigned j = 0; j < hidden_[i].size(); j++ )
         {
-            cerr << "+";
+            //cerr << "+";
 
-            hidden_[i][j]->update_weights( ALPHA, edges_[j], (*deltas.top())[j] );
+            hidden_[i][j]->update_weights( ALPHA, edges_[i], (*deltas.top())[j] );
         }
-        cerr << endl;
+        //cerr << endl;
         deltas.pop();
     }
 

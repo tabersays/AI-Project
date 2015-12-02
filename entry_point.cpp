@@ -68,10 +68,12 @@ int run_net( ANN& network )
     return 0;
 }
 
-int train_net( ANN& network, string name )
+int train_net( ANN& network, string name, string file )
 {
     Directory dir(name);
     ofstream number;
+
+    string save_file = file + "_new";
 
     //timing
     high_resolution_clock::time_point begin;
@@ -112,9 +114,11 @@ int train_net( ANN& network, string name )
         end = high_resolution_clock::now();
 
         dur = duration_cast<duration<double>>(end - begin);
-        cout << "  Training itteration took " << dur.count() << " seconds." << endl;
+        cout
+            << "  Training itteration " << i 
+            << " took " << dur.count() << " seconds." << endl;
 
-        network.save();
+        network.save(save_file);
 
         number << i << flush;
         number.close();
@@ -152,7 +156,7 @@ int main( int argc, char* argv[] )
         case 2:
             return run_net( network );
         case 3:
-            return train_net( network, dir );
+            return train_net( network, dir, argv[1] );
         default:
             cerr << "\tToo many arguments.\n" << endl;
             return 1;

@@ -42,16 +42,16 @@ LD Node::activate( const vector<LD>& data )
     {
 //        cerr << ".";
         assert( data[ii] != 0 );
-        assert( !isnan(weights_[ii]) );
-        output += data[ii] * weights_[ii];
+        LD w = (!isnan(weights_[ii]) ? weights_[ii] : -0.000011);
+        output += data[ii] * w;
     }
 
     LD final_output = (LD)1.0;
     LD denom = ( (LD)1.0 + (LD)exp(-output) );
-//    cerr << output;
+    //    cerr << output;
     assert( denom != 0 );
-//    assert( !isnan(denom) );
-//    assert( !isnan( final_output / denom ) );
+    //    assert( !isnan(denom) );
+    //    assert( !isnan( final_output / denom ) );
 
     return final_output / denom;
 }
@@ -100,7 +100,7 @@ LD Node::train( LD /*alpha*/, LD output, LD expected )
  */
 LD Node::train( LD output, vector<LD>& y, vector<LD>& weights )
 {
-    cerr << "y " << y.size() << " weights " << weights.size() << endl;
+    //cerr << "y " << y.size() << " weights " << weights.size() << endl;
     assert( y.size() == weights.size() );
     assert( !isnan(output) );
 
@@ -123,8 +123,9 @@ void Node::update_weights( LD alpha, vector<LD>& inputs, LD delta )
     w_ += alpha * delta;
     for( unsigned ii = 0; ii < weights_.size(); ii++ )
     {
- //       assert( !isnan( inputs[ii] ) ); //update_weights
-        LD x = (isnan(inputs[ii]) ? 0.000101010 : inputs[ii]);
+        //       assert( !isnan( inputs[ii] ) ); //update_weights
+        LD x = (isnan(inputs[ii]) ? -0.000101010 : inputs[ii]);
+        //        LD x = inputs[ii];
         weights_[ii] += ( alpha * x * delta );
         //        assert( !isnan( weights_[ii] ) ); //update_weights
     }
@@ -142,11 +143,12 @@ void Node::update_weights( LD alpha, vector<LD>& inputs, LD delta )
  */
 ostream& operator<<( ostream& out, Node node )
 {
-    out << node.w_ << " ";
+    out << setprecision(PREC) << node.w_ << " ";
     unsigned i = node.weights_.size();
     for( unsigned ii = 0; ii < i; ii++ )
     {
-        out << node.weights_[ii];
+        LD w = isnan(node.weights_[ii]) ? 0.00001 : node.weights_[ii];
+        out << setprecision(PREC) << w;
         if( ii != (i - 1) )
             out << " ";
     }
@@ -171,6 +173,12 @@ bool Node::load( istream& in )
     while( in.peek() != '@' )
     {
         in >> n;
+        /*
+        if( n != 0 )
+            cerr << n << "-";
+        assert( n != 0 );
+        */
+
         weights_.push_back(n);
     }
     in.ignore();

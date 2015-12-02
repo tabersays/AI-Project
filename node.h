@@ -20,7 +20,15 @@ using std::exp;
 #include<vector>
 using std::vector;
 
+#include<iomanip>
+using std::setprecision;
+
+#include<limits>
+using std::numeric_limits;
+
 #include"typedefs.h"
+
+const int PREC = numeric_limits<long double>::digits10 + 1;
 
 /** All nodes are in either the hidden or output layers, nodes in the input
  * layer will simply be the result of a single image processing function/object

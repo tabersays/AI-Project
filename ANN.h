@@ -41,7 +41,7 @@ class ANN
         ~ANN( void );
 
         bool load( char* );
-        bool save();
+        bool save( string );
 
         LD run();
         void back_propagate( LD );
