@@ -28,19 +28,21 @@ end
 node.write("%\n")
 
 #all other hidden layers
-count = hidden_nodes
+count = hidden_nodes/reduction_step
 last_node_layer = 0
+previous = hidden_nodes
 puts "Node count =  #{count}."
 while count > 1
     last_node_layer = count
     for i in 0..count - 1
         node_data = "1"
-        for j in 0..count - 1
+        for j in 0..previous - 1
              node_data = node_data + " " + rand(0.0...1.0).to_s
         end
         node_data = node_data + "@\n"
         node.write(node_data)
     end
+    previous = count
     node.write("%\n")
     count = (count / reduction_step).floor
     puts "Node count =  #{count}."
