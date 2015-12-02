@@ -35,7 +35,7 @@ while count > 1
     last_node_layer = count
     for i in 0..count - 1
         node_data = "1"
-        for j in 0..count
+        for j in 0..count - 1
              node_data = node_data + " " + rand(0.0...1.0).to_s
         end
         node_data = node_data + "@\n"
