@@ -12,6 +12,7 @@ hidden_nodes = gets.to_i
 puts "Reduction step?"
 reduction_step = gets.to_i
 
+
 node = File.new(file_name, "w")
 node.write("#{in_nodes}\n#{hidden_nodes}\n")
 
@@ -41,7 +42,7 @@ while count > 1
         node.write(node_data)
     end
     node.write("%\n")
-    count = (count / reduction_step).ceil
+    count = (count / reduction_step).floor
     puts "Node count =  #{count}."
 end
 
