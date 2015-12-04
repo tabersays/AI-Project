@@ -14,8 +14,8 @@
 
 using namespace std;
 
-const string TESTFILE = "testing/.load_test_node";
-const string HW_TEST = "testing/.node_hw_test";
+const string TESTFILE = "testing/load_test_node";
+const string HW_TEST = "testing/node_hw_test";
 
 int main()
 {
