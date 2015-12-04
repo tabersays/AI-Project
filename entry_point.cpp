@@ -35,12 +35,12 @@ using std::chrono::duration_cast;
 int run_net( ANN& network )
 {
     string image_file;
-    char loop = 0;
+    char loop = 'y';
 
     while( loop == 'y' || loop == 'Y' )
     {
-        cout
-            << "\033[2J"; //Clear the screen.
+        //cout
+        //   << "\033[2J"; //Clear the screen.
         cout
             << "Enter mage file name (and path):" << endl 
             << "\t$ " << flush;
@@ -56,7 +56,14 @@ int run_net( ANN& network )
         }
         LD result = network.run();
 
-        cout << "Your image was the letter '" << (char)round(result * 128) << endl;
+        cout << "Return value:              " << result << endl;
+        char ch;
+        ch = round(result * 52);
+        ch += (ch >= 27) ? 'a' : 'A';
+        //ch = -ch;
+
+        cout << "ASCII                      " << (int) ch << endl;
+        cout << "Your image was the letter '" << ch << "'." << endl;
 
         cout
             << "Do you wish to try another image? (y/n)" << endl << "\t$ ";

@@ -46,14 +46,17 @@ LD Node::activate( const vector<LD>& data )
         output += data[ii] * w;
     }
 
+    /*
     LD final_output = (LD)1.0;
     LD denom = ( (LD)1.0 + (LD)exp(-output) );
     //    cerr << output;
     assert( denom != 0 );
     //    assert( !isnan(denom) );
     //    assert( !isnan( final_output / denom ) );
+    */
+    //return final_output / denom;
 
-    return final_output / denom;
+    return 1 / (1 + abs(output) );
 }
 
 /**

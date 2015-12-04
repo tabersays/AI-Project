@@ -74,7 +74,7 @@ void Image_Loader::make_inputs( void )
     {
         for( unsigned x = 0; x < x_; x += 4 )
         {
-            short val  = 0;
+            unsigned short val  = 0;
             unsigned short mask = 0x8000;
             for( unsigned yy = y; yy < (y + 4); yy++ )
             {
@@ -92,8 +92,7 @@ void Image_Loader::make_inputs( void )
 
     for( unsigned ii = 0; ii < trans_.size(); ii++ )
     {
-        assert( !isnan( trans_[ii] / ((LD) 0x7fff) ) );
-        inputs_.push_back( trans_[ii] / ((LD) 0x7fff) );
+        inputs_.push_back( trans_[ii] / ((LD) 0xffff) );
     }
 }
 
@@ -113,8 +112,9 @@ Image_Loader::Image_Loader( string i ) : image_name_(i)
  */
 LD Image_Loader::expected( void )
 {
-    LD val = (int) image_name_[0];
-    return val / 0x7fff;
+    LD val = image_name_[0];
+    val -= (val > 0x60 ) ? 0x60 : 0x40;
+    return val / 52;
 }
 
 /** Prints debug information.

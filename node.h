@@ -16,6 +16,7 @@ using std::istream;
 
 #include<cmath>
 using std::exp;
+using std::abs;
 
 #include<vector>
 using std::vector;

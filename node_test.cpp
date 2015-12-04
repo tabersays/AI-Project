@@ -1,6 +1,9 @@
 /**
  *
  * Compile with the command <make node_test>
+ *
+ *  This test will not compile at this point as some interface changes have
+ * been made to node class that it is testing, but it should be easily fixed.
  */
 #include<iostream>
 #include<fstream>
@@ -11,8 +14,8 @@
 
 using namespace std;
 
-const string TESTFILE = ".load_test_node";
-const string HW_TEST = ".node_hw_test";
+const string TESTFILE = "testing/.load_test_node";
+const string HW_TEST = "testing/.node_hw_test";
 
 int main()
 {
