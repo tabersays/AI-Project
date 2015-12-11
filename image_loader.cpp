@@ -74,8 +74,8 @@ void Image_Loader::make_inputs( void )
     {
         for( unsigned x = 0; x < x_; x += 4 )
         {
-            unsigned short val  = 0;
-            unsigned short mask = 0x8000;
+            unsigned val  = 0;
+            unsigned mask = 0x8000;
             for( unsigned yy = y; yy < (y + 4); yy++ )
             {
                 for( unsigned offset = x; offset < (x + 4); offset++ )
@@ -86,7 +86,7 @@ void Image_Loader::make_inputs( void )
                     mask = mask >> 1;
                 }
             }
-            trans_.push_back(( val != 0) ? val : 1 );
+            trans_.push_back( val + 1 );
         }
     }
 
