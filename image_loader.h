@@ -67,7 +67,7 @@ class Image_Loader
 
         bool                        image_load_state_;
         vector<LD>                  inputs_;
-        vector<short>               trans_;
+        vector<unsigned>               trans_;
         vector<bool>                pixels_;
         string                      image_name_;
         unsigned                    x_; ///< Image x-dimension.

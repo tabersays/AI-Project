@@ -22,6 +22,8 @@ Directory::Directory( string name = "./" )
             files_.push_back(name + fname );
     }
 
+    /*
     for( unsigned i = 0; i < files_.size(); i++ )
         cout << files_[i] << endl;
+        */
 }
