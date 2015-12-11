@@ -19,6 +19,11 @@ const string HW_TEST = "testing/node_hw_test";
 
 int main()
 {
+
+    cerr
+        << "NOTE:  After many interface changes to the node class, this\n"
+        << "program no longer compiles and runs properly.\n" << endl;
+    /*
     cout 
         << "\nGeneric load-from-file test.  File name: " 
         << TESTFILE << endl
@@ -96,5 +101,6 @@ int main()
         << "\tw4:\t" << *layers[1][0]
         << "\tw5:\t" << *layers[1][1] << endl;
 
+        */
     return 0;
 }

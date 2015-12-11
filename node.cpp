@@ -46,17 +46,27 @@ LD Node::activate( const vector<LD>& data )
         output += data[ii] * w;
     }
 
-    /*
+
     LD final_output = (LD)1.0;
-    LD denom = ( (LD)1.0 + (LD)exp(-output) );
+    LD expo = 0.0;
+    if( 100 > output && output > -100 )
+    {
+        expo = exp( -output );
+    }
+    else if( output > 0 )
+        expo = 0.0;
+    else
+        expo = 1.0;
+
+    LD denom = ( (LD)1.0 + expo );
     //    cerr << output;
-    assert( denom != 0 );
+    //assert( denom != 0 );
     //    assert( !isnan(denom) );
     //    assert( !isnan( final_output / denom ) );
-    */
-    //return final_output / denom;
 
-    return 1 / (1 + abs(output) );
+    return final_output / denom;
+
+    //    return 1 / (1 + abs(output) );
 }
 
 /**
@@ -177,10 +187,10 @@ bool Node::load( istream& in )
     {
         in >> n;
         /*
-        if( n != 0 )
-            cerr << n << "-";
-        assert( n != 0 );
-        */
+           if( n != 0 )
+           cerr << n << "-";
+           assert( n != 0 );
+           */
 
         weights_.push_back(n);
     }

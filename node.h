@@ -14,6 +14,7 @@
 using std::ostream;
 using std::istream;
 
+#include<cfenv>
 #include<cmath>
 using std::exp;
 using std::abs;
@@ -26,10 +27,10 @@ using std::setprecision;
 
 #include<limits>
 using std::numeric_limits;
+///Store the precision of a long double.
+const int PREC = numeric_limits<long double>::digits10 + 1;
 
 #include"typedefs.h"
-
-const int PREC = numeric_limits<long double>::digits10 + 1;
 
 /** All nodes are in either the hidden or output layers, nodes in the input
  * layer will simply be the result of a single image processing function/object
