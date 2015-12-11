@@ -92,7 +92,7 @@ void Image_Loader::make_inputs( void )
 
     for( unsigned ii = 0; ii < trans_.size(); ii++ )
     {
-        inputs_.push_back( trans_[ii] );/// ((LD) 0xffff) );
+        inputs_.push_back( trans_[ii] / ((LD) 0xffff) );
     }
 }
 
