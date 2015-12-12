@@ -4,8 +4,9 @@
  *   @file ANN.cpp
  *
  *   @author Michael Taylor
- *   @author Matt ?
+ *   @author Matt 
  *   @author Thomas Russel Carrel
+ *   @author Taber Storm Fitzgerald
  */
 
 

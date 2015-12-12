@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#Taber Storm Fitzgerald
+# @author Taber Storm Fitzgerald
 #This script flattens the png's then converts them to bmp's and moves them into the bmp directory.
 #This assumes it is going to be run from the /dataSet/png directory
 for i in *.png;

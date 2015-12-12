@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# @author Taber Storm Fitzgerald
 COUNT=0;
 for i in *.png;
 do
